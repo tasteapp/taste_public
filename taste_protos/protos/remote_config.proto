@@ -1,0 +1,23 @@
+syntax = "proto3";
+package remote_config;
+
+message SupportedVersionsV2 {
+  map<string, bool> version_is_supported = 1;
+  bool forbid_by_default = 2;
+}
+
+message SupportedVersionsVersioning {
+  // map<string: version,bool: is-supported>
+  // Version 1
+  string supported_versions = 1;
+  // bool
+  string allow_undefined_versions = 2;
+  string supported_versions_v2 = 3; // SupportedVersionsV2
+}
+
+enum Experiment {
+  experiment_undefined = 0;
+  starting_tab_experiment = 1;
+  taste_logo_experiment = 2;
+  taste_hidden_experiment = 3;
+}

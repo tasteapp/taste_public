@@ -1,0 +1,9 @@
+{
+    "protoc": {
+        "options": [
+            "-Iprotos/",
+            "-I../protoc-gen-bq-schema/",
+            "-I../rules-gen/proto/"
+        ]
+    }
+}

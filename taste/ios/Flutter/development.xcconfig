@@ -1,0 +1,8 @@
+#include "Generated.xcconfig"
+#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.release-development.xcconfig"
+BUNDLE_ID_SUFFIX=.dev
+PRODUCT_BUNDLE_IDENTIFIER=app.trytaste.taste
+FLUTTER_TARGET=lib/main_development.dart
+APP_NAME=Taste Dev
+USE_SWIFT_RESPONSE_FILE=yes
+TASTE_HOSTNAME=dev.trytaste.app

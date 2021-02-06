@@ -1,0 +1,847 @@
+syntax = "proto3";
+package firestore;
+
+import "common.proto";
+import "algolia.proto";
+import "review.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "firebase_rules_options.proto";
+
+enum CollectionType {
+  COLLECTION_TYPE_UNDEFINED = 0;
+  algolia_records = 1;
+  bookmarks = 2;
+  bug_reports = 4;
+  comments = 5;
+  favorites = 9;
+  followers = 10;
+  home_meals = 11;
+  likes = 12;
+  mail = 13;
+  notifications = 14;
+  operations = 15;
+  photos = 16;
+  private_documents = 17;
+  reports = 21;
+  restaurants = 22;
+  reviews = 23;
+  users = 26;
+  /// Experimental cache "view" for a review to make loading reviews faster on
+  /// frontend.
+  view = 27;
+  /// User views on a review.
+  views = 28;
+  instagram_username_requests = 29;
+  badges = 30;
+  // Used for guaranteeing that certain records have at most one unique
+  // (parent,user) combo.
+  index = 31;
+  discover_items = 32;
+  contests = 33;
+  insta_posts = 34;
+  daily_tasty_votes = 35;
+  cities = 36;
+  conversations = 37;
+  tags = 38;
+  movies = 39;
+  inference_results = 40;
+  instagram_tokens = 41;
+  instagram_locations = 42;
+  bad_crops = 43;
+  taste_bud_groups = 44;
+  recipe_requests = 45;
+  mailchimp_user_settings = 46;
+  instagram_scrape_requests = 47;
+  // Look up for where to center on a user's posts. Populated by the scheduled
+  // cloud function userPostsStartingLocation.
+  user_posts_starting_locations = 48;
+  // TODO(team): remove when safe.
+  instagram_posts = 49;
+  instagram_network_scrape_requests = 50;
+  google_places = 51;
+  google_reviews = 52;
+  yelp_places = 53;
+  yelp_reviews = 54;
+  food_finder_actions = 55;
+}
+
+message RecipeRequest {
+  option (rules_gen.message).required = true;
+  common.DocumentReferenceProto user = 1;
+  common.DocumentReferenceProto parent = 2;
+  common.Extras _extras = 3;
+}
+
+message Comment {
+  common.DocumentReferenceProto user = 1 [ (rules_gen.field).required = true ];
+  string text = 2
+      [ (rules_gen.field).required = true, (rules_gen.field).not_empty = true ];
+  common.Extras _extras = 5 [ (rules_gen.field).required = true ];
+  ;
+  common.DocumentReferenceProto parent = 7
+      [ (rules_gen.field).required = true ];
+  repeated common.DocumentReferenceProto tagged_users = 8;
+}
+
+enum NotificationType {
+  UNDEFINED = 0;
+  like = 1;
+  comment = 2;
+  follow = 3;
+  message = 5;
+  bookmark = 7;
+  meal_mate = 8;
+  conversation = 9;
+  daily_digest = 10;
+  flagged_review_update = 11;
+  won_daily_tasty = 12;
+  recipe_request = 13;
+  recipe_added = 14;
+}
+
+message Notification {
+  string body = 1;
+  string title = 2;
+  common.DocumentReferenceProto document_link = 3;
+  NotificationType notification_type = 4;
+  common.DocumentReferenceProto user = 5;
+  bool seen = 6;
+  enum FCMSettings {
+    fcm_settings_undefined = 0;
+    fcm_settings_on_create_only = 1;
+    fcm_settings_on_all_events = 2;
+  }
+  FCMSettings fcm_settings = 7;
+}
+
+message Operation {
+  string text = 1;
+  int32 status = 2;
+  common.Extras _extras = 3;
+  common.DocumentReferenceProto parent = 4;
+}
+
+message InstagramSettings {
+  enum AutoImportSetting {
+    AUTO_IMPORT_SETTING_UNDEFINED = 0;
+    never = 1;
+    daily = 2;
+  }
+  AutoImportSetting auto_import_setting = 1;
+}
+
+message InstagramInfo {
+  string username = 1;
+  string user_id = 2;
+  int32 num_posts = 3;
+  InstagramSettings settings = 4;
+  common.FirePhoto profile_pic = 5;
+  string display_name = 6;
+  int32 num_followers = 7;
+  int32 num_following = 8;
+  bool is_private = 9;
+  bool token_invalid = 10;
+  bool granted_permission = 11;
+  string profile_pic_url = 12;
+  string email = 13;
+  string biography = 14;
+  string phone_number = 15;
+  google.protobuf.Timestamp scrape_finish_time = 16;
+  google.protobuf.Timestamp start_network_time = 17;
+  google.protobuf.Timestamp end_network_time = 18;
+  repeated string following = 19;
+}
+
+message TasteUser {
+  string display_name = 1;
+  string photo_url = 3;
+  message Vanity {
+    string display_name = 1;
+    string username = 2;
+    common.DocumentReferenceProto photo = 3 [ deprecated = true ];
+    common.FirePhoto fire_photo = 6;
+    bool has_set_up_account = 4;
+    string phone_number = 5;
+  }
+  Vanity vanity = 2;
+  common.Extras _extras = 5;
+  int32 score = 8;
+  string email = 9;
+  message DailyDigest { bool enabled = 1; }
+  DailyDigest daily_digest = 10;
+  string fb_id = 11;
+  InstagramInfo instagram_info = 12;
+  bool guest_mode = 13;
+  string uid = 14;
+  repeated common.DocumentReferenceProto setup_liked_restos = 15;
+}
+
+message FoodFinderAction {
+  common.DocumentReferenceProto user = 1;
+  common.DocumentReferenceProto restaurant = 2;
+  repeated common.DocumentReferenceProto discover_items = 3;
+  int32 active_discover_item_index = 4;
+  enum ActionType {
+    // Standard value, alias for `restaurant`.
+    ACTION_TYPE_UNDEFINED = 0;
+    // At a public restaurant.
+    add_to_list = 1;
+    pass = 2;
+    never_show_again = 3;
+    open_resto_page = 4;
+    remove_from_list = 5;
+  }
+  ActionType action = 5;
+  string session_id = 6;
+  google.protobuf.Timestamp time = 7;
+}
+
+enum BlackCharity {
+  CHARITY_UNDEFINED = 0;
+  eji = 1;
+  splc = 2;
+  aclu = 3;
+}
+
+message Review {
+  string text = 1;
+  common.DocumentReferenceProto user = 2;
+  common.DocumentReferenceProto photo = 3 [ deprecated = true ];
+  review.Reaction reaction = 5;
+  enum MealType {
+    // Standard value, alias for `restaurant`.
+    MEAL_TYPE_UNDEFINED = 0;
+    // At a public restaurant.
+    meal_type_restaurant = 1;
+    // At-home meal
+    meal_type_home = 2;
+  }
+  MealType meal_type = 6;
+  bool published = 8;
+  int32 score = 9;
+  common.Extras _extras = 13;
+  repeated string emojis = 15;
+  common.LatLng location = 16;
+  string dish = 17;
+  common.DocumentReferenceProto restaurant = 10;
+  common.LatLng restaurant_location = 11;
+  Restaurant.Attributes.Address address = 12;
+  string restaurant_name = 18;
+  // Reserved for auto-added ML tags.
+  repeated string attributes = 19;
+  repeated common.DocumentReferenceProto meal_mates = 20;
+  common.DocumentReferenceProto contest = 21;
+  enum DeliveryApp {
+    UNDEFINED = 0;
+    postmates = 1;
+    grub_hub = 2;
+    uber_eats = 3;
+    seamless = 4;
+    door_dash = 5;
+    eat_24 = 6;
+  }
+  DeliveryApp delivery_app = 22;
+  repeated common.DocumentReferenceProto more_photos = 23 [ deprecated = true ];
+  repeated common.FirePhoto fire_photos = 30;
+  repeated common.DocumentReferenceProto user_tags_in_text = 24;
+  common.DocumentReferenceProto insta_post = 25;
+  google.protobuf.Timestamp imported_at = 26;
+  Awards awards = 27;
+  bool freeze_place = 28;
+  repeated string categories = 29;
+  string recipe = 31;
+  enum BlackOwnedStatus {
+    BLACK_OWNED_UNDEFINED = 0;
+    restaurant_black_owned = 1;
+    restaurant_not_black_owned = 2;
+    user_selected_black_owned = 3;
+  }
+  BlackOwnedStatus black_owned = 32;
+  BlackCharity black_charity = 33;
+  int32 num_insta_likes = 34;
+  int32 num_insta_followers = 35;
+  bool hidden = 36;
+  repeated common.FoodType food_types = 37;
+  repeated int32 food_types_photo_indices = 38;
+}
+
+message Restaurant {
+  message Attributes {
+    common.LatLng location = 1 [ (rules_gen.field).required = true ];
+    string name = 2 [
+      (rules_gen.field).required = true,
+      (rules_gen.field).not_empty = true
+    ];
+    string google_place_id = 3 [ (rules_gen.field).not_empty = true ];
+    repeated string all_fb_place_ids = 4;
+    string fb_place_id = 5 [
+      (rules_gen.field).required = true,
+      (rules_gen.field).not_empty = true
+    ];
+    message Address {
+      string street = 1;
+      string city = 2 [
+        (rules_gen.field).required = true,
+        (rules_gen.field).not_empty = true
+      ];
+      string state = 3;
+      string country = 4 [
+        (rules_gen.field).required = true,
+        (rules_gen.field).not_empty = true
+      ];
+      enum Source {
+        SOURCE_UNDEFINED = 0;
+        facebook = 1;
+        google_geocoder = 2;
+      }
+      Source source = 5 [ (rules_gen.field).required = true ];
+      common.LatLng source_location = 6 [ (rules_gen.field).required = true ];
+    }
+    Address address = 6 [ (rules_gen.field).required = true ];
+    repeated string categories = 7;
+    bool black_owned = 8;
+    // Phone number in standardized format. +XXXXXXX...
+    string phone = 9;
+    string website = 10;
+    repeated common.FoodType food_types = 11;
+    // Place types from scraped yelp reviews. The associated score for a type
+    // can be looked up in the `place_type_scores` field below.
+    repeated common.PlaceType place_types = 12;
+    // The frequency of the place type in yelp reviews. Higher values indicate
+    // higher confidence that the given place type is relevant. By convention
+    // we give a value of 1.0 if the FB Place category is set to a particular
+    // place type.
+    repeated double place_type_scores = 13;
+    // Whether the place_types have been set on this restaurant from scraped
+    // yelp reviews.
+    bool place_types_set = 14;
+    Hours hours = 15;
+    bool queried_hours = 16;
+  }
+
+  message DeliveryAppInfo {
+    // repeated string cuisine = 2;
+    string phone = 1;
+    bool subscription_discount = 2;
+    bool taking_orders = 3;
+    string delivery_fee = 4;
+    Hours hours = 5;
+    string extra = 6;
+    bool has_delivery = 7;
+    bool has_pickup = 8;
+  }
+  
+  message HoursInfo {
+    bool is_open = 1;
+    HoursWindows delivery = 2;
+    HoursWindows pickup = 3;
+    FacebookHours fb_hours = 4;
+  }
+  
+  message HoursWindows {
+    repeated string begin = 1;
+    // Comment this out when running make update_bq_views
+    repeated string end = 2;
+  }
+
+  message OpenWindow {
+    string open = 1;
+    string close = 2;
+  }
+  
+  message FacebookHours {
+    repeated OpenWindow hours = 1;
+  }
+  
+  message Hours {
+    HoursInfo Mon = 1;
+    HoursInfo Tue = 2;
+    HoursInfo Wed = 3;
+    HoursInfo Thu = 4;
+    HoursInfo Fri = 5;
+    HoursInfo Sat = 6;
+    HoursInfo Sun = 7;
+    bool has_hours = 8;
+  }
+
+  message DeliveryInfo {
+    DeliveryAppInfo ubereats = 1;
+    DeliveryAppInfo postmates = 2;
+    DeliveryAppInfo grubhub = 3;
+    DeliveryAppInfo doordash = 4;
+    DeliveryAppInfo favor = 5;
+  }
+
+  message DeliveryUrl {
+    //String is '0' if there is no match
+    string ubereats = 1;
+    string postmates = 2;
+    string grubhub = 3;
+    string seamless = 4;
+    string doordash = 5;
+    string caviar = 6;
+    string favor = 7;
+  }
+
+  common.Extras _extras = 1 [ (rules_gen.field).required = true ];
+  Attributes attributes = 2 [ (rules_gen.field).required = true ];
+  common.DocumentReferenceProto merchant = 3;
+  common.ScraperResults yelp = 4;
+  common.ScraperResults google = 5;
+  double popularity_score = 6;
+  common.DocumentReferenceProto profile_pic = 7 [ deprecated = true ];
+  string profile_pic_external_url = 8 [ (rules_gen.field).is_http = true ];
+  common.FirePhoto fire_profile_pic = 9;
+  bool yelp_scraped = 10;
+  bool yelp_match = 11;
+  bool google_scraped = 12;
+  bool google_match = 13;
+  bool from_hidden_review = 14;
+  double gm_yelp_score = 15;
+  double instagram_score = 16;
+  SpatialIndex spatial_index = 17;
+  // An alternative spatial indexing that can be queried using ranges.
+  string geohash = 18;
+  int32 num_reviews = 19;
+  int32 num_visible_reviews = 20;
+  bool delivery_scraped = 21;
+  DeliveryUrl delivery_url = 22;
+  DeliveryInfo delivery_info = 23;
+  bool delivery_scraper_error = 24;
+  int32 total_ig_likes = 25;
+  int32 total_ig_followers = 26;
+  int32 num_ig_posts = 27;
+  bool scores_up_to_date = 28;
+  common.FirePhoto top_review_pic = 29;
+}
+
+message View {
+  common.DocumentReferenceProto user = 1;
+  common.DocumentReferenceProto parent = 2;
+}
+
+message Photo {
+  common.DocumentReferenceProto user = 1;
+  string firebase_storage_path = 2;
+  // Will be populated if ObjectDetection successfully ran and food was
+  // detected. The polygon with the largest area will be selected as the center.
+  message InferenceData {
+    common.DocumentReferenceProto source_ref = 1;
+    common.Point detection_center = 2;
+  }
+  InferenceData inference_data = 4;
+  // Tracks where this photo is referenced.
+  // So far, this is used only in the one-to-many mapping of review to photo.
+  repeated common.DocumentReferenceProto references = 5;
+  common.Size photo_size = 6;
+}
+
+message Follower {
+  common.DocumentReferenceProto following = 1;
+  common.DocumentReferenceProto follower = 2;
+  common.Extras _extras = 3;
+}
+
+message Favorite {
+  common.DocumentReferenceProto restaurant = 1;
+  common.DocumentReferenceProto user = 2;
+  common.Extras _extras = 3;
+}
+
+message Like {
+  common.DocumentReferenceProto parent = 1;
+  common.DocumentReferenceProto user = 2;
+  common.Extras _extras = 3;
+}
+
+message Bookmark {
+  common.DocumentReferenceProto parent = 1;
+  common.DocumentReferenceProto user = 2;
+  common.Extras _extras = 3;
+}
+
+message BugReport {
+  string text = 1;
+  common.DocumentReferenceProto user = 2;
+  repeated common.DocumentReferenceProto bug_photos = 3;
+  BugReportType report_type = 4;
+  common.AppMetadata metadata = 5;
+  common.Extras _extras = 6;
+}
+
+enum BugReportType {
+  bug_report = 0;
+  feedback = 1;
+}
+
+message Report {
+  common.DocumentReferenceProto user = 1;
+  common.DocumentReferenceProto parent = 2;
+  bool resolved = 3;
+  string text = 4;
+  string resolution_text = 5;
+  bool send_notification = 6;
+}
+
+message AlgoliaRecord {
+  algolia.AlgoliaIndex index = 1;
+  algolia.AlgoliaRecordType record_type = 2;
+  repeated string tags = 3;
+  common.DocumentReferenceProto reference = 4;
+  string object_id = 5;
+  google.protobuf.Struct payload = 6;
+  common.LatLng location = 7;
+}
+
+message InstagramUsernameRequest {
+  string username = 1;
+  google.protobuf.Timestamp most_recent_post_date = 2;
+  bool set_location_request = 3;
+}
+
+message InstagramPost {
+  string username = 1;
+  int32 likes = 3;
+  string full_name = 4;
+  string profile_pic_url = 5;
+  string text = 6;
+  string code = 7;
+  string location_name = 8;
+  common.LatLng location = 9;
+  google.protobuf.Timestamp date_processed = 10;
+  google.protobuf.Timestamp date_posted = 11;
+  SpatialIndex spatial_index = 12;
+  enum PostType {
+    POST_TYPE_UNDEFINED = 0;
+    instagram = 1;
+    taste = 2;
+  }
+  PostType post_type = 13;
+  string pk = 14;
+  enum PhotoClassification {
+    PHOTO_CLASSIFICATION_UNDEFINED = 0;
+    food = 1;
+  }
+  repeated PhotoClassification classifications = 15;
+  string s3_photo_url = 16;
+  enum InstagramPostSource {
+    InstagramPostSource_UNDEFINED = 0;
+    queue_processor = 1;
+    cloud_function_trigger = 2;
+  }
+  InstagramPostSource source = 17;
+  common.DocumentReferenceProto reference = 19;
+  repeated string photo_urls = 20;
+}
+
+message Badge {
+  common.DocumentReferenceProto user = 1;
+  enum BadgeType {
+    BADGE_TYPE_UNDEFINED = 0;
+    streak_longest = 1;
+    streak_active = 2;
+    post_cities_total = 3;
+    post_countries_total = 4;
+    favorites_cities_total = 5;
+    favorites_countries_total = 6;
+    commenter_level_1 = 7;
+    emoji_flags_level_1 = 8;
+    brainiac = 9;
+    burgermeister = 10;
+    sushinista = 11;
+    regular = 12;
+    herbivore = 13;
+    socialite = 14;
+    ramsay = 15;
+    character = 16;
+    city_champion = 17;
+    quarantine = 18;
+    daily_tasty = 19;
+    black_owned_restaurant_post = 20;
+  }
+  BadgeType type = 2;
+  message CountData { int32 count = 1; }
+  CountData count_data = 3;
+  message CityChampion {
+    message City {
+      string city = 1;
+      string country = 2;
+      string state = 3;
+    }
+    repeated City cities = 1;
+  }
+  CityChampion city_champion_data = 4;
+  message EmojiFlags { repeated string flags = 1; }
+  EmojiFlags emoji_flags = 5;
+  repeated common.DocumentReferenceProto matching_references = 6;
+  message Brainiac { repeated string attributes = 1; }
+  Brainiac brainiac_info = 7;
+}
+
+message SpatialIndex {
+  // Highest level S2CellID token.
+  string cell_id = 1;
+  // Tokens for all level 1-16 cell-ids, r-stripped of zeros.
+
+  repeated string levels = 2;
+}
+
+message UniqueUserIndex { common.DocumentReferenceProto reference = 1; }
+
+message DiscoverItem {
+  common.DocumentReferenceProto reference = 1;
+  message DiscoverRestaurant {
+    common.DocumentReferenceProto reference = 1;
+    string name = 2;
+    Restaurant.Attributes.Address address = 3;
+  }
+  DiscoverRestaurant restaurant = 2;
+  message DiscoverReview {
+    string text = 1 [ deprecated = true ];
+    review.Reaction reaction = 2;
+    message DiscoverMealMates {
+      message DiscoverMealMate { common.DocumentReferenceProto reference = 1; }
+      repeated DiscoverMealMate meal_mates = 1;
+    }
+    DiscoverMealMates meal_mates = 3;
+    string raw_text = 4;
+    repeated string emojis = 5;
+    repeated string attributes = 6;
+    Review.DeliveryApp delivery_app = 7;
+    string recipe = 8;
+    repeated common.FoodType food_types = 9;
+    repeated int32 food_types_photo_indices = 10;
+  }
+  DiscoverReview review = 3;
+  message User {
+    common.DocumentReferenceProto reference = 1;
+    string name = 2;
+    string photo = 3;
+  }
+  User user = 4;
+  google.protobuf.Timestamp date = 5;
+  message Comment {
+    common.DocumentReferenceProto reference = 1;
+    string text = 2;
+    google.protobuf.Timestamp date = 3;
+    User user = 4;
+  }
+  repeated Comment comments = 6;
+  Review.MealType meal_type = 7;
+  common.LatLng location = 8;
+  string dish = 9;
+  string photo = 10 [ deprecated = true ];
+  repeated string tags = 11;
+  repeated string more_photos = 12 [ deprecated = true ];
+  common.DocumentReferenceProto insta_post = 13;
+  Awards awards = 14;
+  bool freeze_place = 15;
+  // For instagram
+  google.protobuf.Timestamp imported_at = 16;
+  bool is_instagram_post = 17;
+  repeated common.FirePhoto fire_photos = 18;
+  common.Extras _extras = 20;
+  bool black_owned = 21;
+  repeated User likes = 22;
+  repeated User bookmarks = 23;
+  BlackCharity black_charity = 24;
+  int32 score = 25;
+  repeated string categories = 26;
+  SpatialIndex spatial_index = 27;
+  bool hidden = 28;
+  int32 num_insta_likes = 29;
+  int32 num_insta_followers = 30;
+  bool show_on_discover_feed = 31;
+}
+
+message City {
+  string city = 1;
+  string state = 2;
+  string country = 3;
+  double popularity_score = 4;
+  common.LatLng location = 5;
+}
+
+message Tag {
+  string tag = 1;
+  double trending_score = 2;
+  google.protobuf.Timestamp last_updated = 3;
+}
+
+message Contest {
+  enum ContestType {
+    contest_type_undefined = 0;
+    contest_type_home_cooking = 1;
+    contest_type_local_restaurants = 2;
+  }
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+  string description = 3;
+  ContestType contest_type = 4;
+}
+
+message DailyTastyVote {
+  option (rules_gen.message).required = true;
+  double score = 1 [ (rules_gen.field).validate =
+                         "resource.score >= 1 && resource.score <= 5" ];
+  common.DocumentReferenceProto user = 2 [ (rules_gen.field).auth_user = true ];
+  common.DocumentReferenceProto post = 3;
+  google.protobuf.Timestamp date = 4;
+  common.Extras _extras = 5;
+}
+
+message Awards { google.protobuf.Timestamp daily_tasty = 1; }
+
+message Conversation {
+  message Message {
+    common.DocumentReferenceProto user = 1;
+    string text = 2;
+    google.protobuf.Timestamp sent_at = 3;
+  }
+  common.Extras _extras = 5 [ (rules_gen.field).required = true ];
+  // Members should be considered to have a stable ordering.
+  // In other words, if a member is in index i, then it should
+  // always be in index i.
+  repeated common.DocumentReferenceProto members = 1 [
+    (rules_gen.field).required = true,
+    (rules_gen.field).validate =
+        "resource.members.size() == 2 && \n"
+        "resource.members.toSet().size() == resource.members.size() && \n"
+        "resource.members[0] is path && \n"
+        "resource.members[1] is path"
+  ];
+
+  repeated Message messages = 2;
+  repeated common.DocumentReferenceProto seen_by = 4;
+  // The key is the stringified integer index of the
+  // member in [members].
+  // So, if [members] is [users/jack,users/bill],
+  // Then the last-seen time of users/jack is
+  // last_seen["0"], and that of users/bill is last_seen["1"].
+  // This is to get around the fact that "." can be in UID's.
+  map<string, google.protobuf.Timestamp> last_seen = 6;
+}
+
+message Movie {
+  common.DocumentReferenceProto user = 1;
+  // Path to firebase storage location
+  string movie = 2;
+  google.protobuf.Timestamp date = 3;
+}
+
+message InferenceResult {
+  common.Extras _extras = 1;
+  common.DocumentReferenceProto photo_ref = 2;
+  /// Field comments from vision/v1.dart.
+  message LocalizedObjectAnnotation {
+    /// Entity textual description, expressed in its `locale` language.
+    string name = 1;
+    /// The language code for the locale in which the entity textual
+    /// `description` is expressed.
+    string locale = 2;
+    /// Overall score of the result. Range [0, 1].
+    double score = 3;
+    /// Image region to which this entity belongs. Set as normalized vertices.
+    common.Polygon bounding_poly = 5;
+  }
+  repeated LocalizedObjectAnnotation objects = 3;
+}
+
+message InstagramToken {
+  common.DocumentReferenceProto user = 1;
+  string code = 2;
+  string token = 3;
+  google.protobuf.Timestamp time_acquired = 4;
+  int32 expires_in = 5;
+  string username = 6;
+  string user_id = 7;
+  enum ImportStatus {
+    import_status_undefined = 0;
+    start = 1;
+    running = 2;
+    complete = 3;
+    added_locations = 4;
+  }
+  ImportStatus import_status = 8;
+  google.protobuf.Timestamp last_update = 9;
+  enum TokenStatus {
+    token_status_undefined = 0;
+    token_failed = 1;
+    short_term_token = 2;
+    long_term_token = 3;
+  }
+  TokenStatus token_status = 10;
+}
+
+message TasteBudGroup {
+  common.DocumentReferenceProto user = 1;
+  message TasteBud {
+    common.DocumentReferenceProto bud = 1;
+    double score = 2;
+  }
+  repeated TasteBud taste_buds = 2;
+}
+
+message PrivateUserDocument {
+  repeated string fcm_tokens = 1;
+  string timezone = 2;
+  string email = 3;
+}
+
+message MailchimpUserSetting {
+  common.DocumentReferenceProto user = 1;
+  repeated string tags = 2;
+}
+
+message UserPostsStartingLocation {
+  string username = 1;
+  common.LatLng location = 2;
+}
+
+message GooglePlaces {
+  string address = 1;
+  google.protobuf.Timestamp last_execute = 2;
+  string name = 3;
+  string phone_number = 4;
+  int32 num_reviews = 5;
+  int32 scraped_reviews = 6;
+  bool match_found = 7;
+  string url = 8;
+  string website = 9;
+}
+
+message YelpPlaces {
+  string place_id = 1;
+  string address = 2;
+  common.LatLng center = 3;
+  bool has_center = 4;
+  google.protobuf.Timestamp last_execute = 5;
+  string name = 6;
+  string phone_number = 7;
+  int32 num_reviews = 8;
+  int32 scraped_reviews = 9;
+  bool success = 10;
+  string url = 11;
+  string website = 12;
+}
+
+message GoogleReviews {
+  common.DocumentReferenceProto place = 1;
+  string text = 2;
+  repeated string photo_urls = 3;
+  bool photos_saved = 4;
+  google.protobuf.Timestamp approximate_timestamp = 5;
+  int32 rating = 6;
+  double random = 7;
+}
+
+message YelpReviews {
+  common.DocumentReferenceProto place = 1;
+  string text = 2;
+  repeated string photo_urls = 3;
+  bool photos_saved = 4;
+  string date = 5;
+  int32 rating = 6;
+  double random = 7;
+}

@@ -1,0 +1,368 @@
+/**
+ * Taste specific styles.
+ **/
+
+@font-face {
+  font-family: "Hurley";
+  src: url("../fonts/Hurley-1967-Script-Reg.otf");
+}
+
+main.inner > * {
+  margin-top: 1em;
+}
+
+@media (min-width: 1377px) {
+  .landing-background {
+    z-index: -2;
+    position: absolute;
+    top: 0px;
+    margin-left: 100px;
+    left: 0px;
+    min-width: 1080px;
+    width: 85%;
+    height: 764px;
+  }
+  .landing-phones {
+    z-index: -1;
+    position: absolute;
+    top: 80px;
+    margin-left: 100px;
+    right: 200px;
+    width: 542px;
+    height: 648px;
+  }
+  .landing-green-bean {
+    z-index: -1;
+    position: absolute;
+    bottom: 0px;
+    margin: auto;
+    width: 980px;
+    height: 225px;
+  }
+  .landing-yellow-bean {
+    z-index: -1;
+    position: absolute;
+    top: 0px;
+    left: 53%;
+    width: 238px;
+    height: 112px;
+  }
+  .taste-summary {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 1376px) {
+  .landing-background {
+    z-index: -2;
+    position: absolute;
+    top: 0px;
+    margin-left: 0px;
+    left: 0px;
+    min-width: 1080px;
+    width: 95%;
+    height: 764px;
+  }
+  .landing-phones {
+    z-index: -1;
+    position: absolute;
+    top: 80px;
+    margin-left: 100px;
+    right: 200px;
+    width: 542px;
+    height: 648px;
+  }
+  .landing-green-bean {
+    z-index: -1;
+    position: absolute;
+    bottom: 0px;
+    margin: auto;
+    width: 980px;
+    height: 225px;
+  }
+  .landing-yellow-bean {
+    z-index: -1;
+    position: absolute;
+    top: 0px;
+    left: 53%;
+    width: 238px;
+    height: 112px;
+  }
+  .taste-summary {
+    max-width: 350px;
+  }
+}
+
+@media (min-width: 1081px) {
+  .landing-phones-embedded {
+    display: none;
+  }
+  .landing-phones {
+    display: visible;
+  }
+  .landing-green-bean {
+    display: visible;
+  }
+  .taste-logo {
+    width: 76.8px;
+    height: 105.6px;
+  }
+  .app-store-buttons-mobile {
+    display: none;
+  }
+}
+
+@media (max-width: 1080px) {
+  .app-store-buttons {
+    display: none;
+  }
+  .landing-phones-embedded {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .taste-logo {
+    width: 64px;
+    height: 88px;
+    display: block;
+    margin: auto;
+  }
+  .taste-copy,
+  .taste-summary,
+  .taste-text {
+    text-align: center;
+  }
+  .taste-summary {
+    max-width: none;
+    font-size: 22px;
+  }
+  .taste-copyright {
+    float: left;
+    margin-left: 15px;
+    margin-top: 25px;
+  }
+  .landing-background {
+    z-index: -2;
+    position: absolute;
+    top: -150px;
+    margin-left: 0px;
+    left: 0px;
+    min-width: 1080px;
+    width: 95%;
+    height: 764px;
+  }
+  .landing-green-bean {
+    display: none;
+  }
+  .landing-phones {
+    display: none;
+  }
+  .landing-green-bean {
+    z-index: -1;
+    position: absolute;
+    bottom: 0px;
+    margin: auto;
+    width: 980px;
+    height: 225px;
+  }
+  .landing-yellow-bean {
+    z-index: -1;
+    position: absolute;
+    top: 0px;
+    left: 53%;
+    width: 238px;
+    height: 112px;
+  }
+  .cover {
+    margin: auto;
+  }
+}
+
+.taste-brand {
+  font-family: "Hurley";
+  font-size: 60px;
+  font-weight: 400;
+  color: #119822;
+}
+
+.taste-brand img {
+  margin-right: 15px;
+  margin-top: 5px;
+  width: 0.7em;
+}
+
+.taste-copy {
+  font-family: "Quicksand";
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.taste-summary {
+  font-family: "Quicksand";
+  font-size: 18px;
+}
+
+.taste-teaser {
+  font-family: "Quicksand";
+  font-size: 33px;
+  font-weight: 400;
+}
+
+.taste-teaser-sm {
+  font-family: "Quicksand";
+  font-size: 29px;
+  font-weight: 400;
+}
+
+.taste-text {
+  font-family: "Quicksand";
+  font-size: 17px;
+  color: #777;
+  /* font-weight: 300; */
+}
+
+.taste-text-small {
+  font-family: "Quicksand";
+  font-size: 17px;
+  color: #777;
+  /* font-weight: 300; */
+}
+
+.taste-form-button {
+  padding: 0;
+  border-width: 0;
+}
+
+.get-updates-container {
+  margin-bottom: 20px;
+}
+
+.taste-copyright a {
+  padding-right: 15px;
+  float: right;
+}
+
+/*
+ * Globals
+ */
+
+/* Links */
+
+a,
+a:focus,
+a:hover {
+  color: #007bff;
+}
+
+a.nav-link.active {
+  color: #007bff;
+}
+
+a.nav-link {
+  color: #333;
+}
+
+/* Custom default button */
+
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+  color: #fff;
+  text-shadow: none;
+  /* Prevent inheritance from `body` */
+  background-color: #333;
+  border: 0.05rem solid #333;
+}
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  color: #333;
+}
+
+/* .cover-container {
+  background-image: url();
+  background-position: right;
+  background-size: 510px;
+  background-repeat: no-repeat;
+} */
+
+/*
+ * Header
+ */
+
+.masthead {
+  margin-bottom: 2rem;
+}
+
+.masthead-brand {
+  margin-bottom: 0;
+}
+
+.nav-masthead .nav-link {
+  padding: 0.25rem 0;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: transparent;
+  border-bottom: 0.25rem solid transparent;
+}
+
+.nav-masthead .nav-link:hover,
+.nav-masthead .nav-link:focus {
+  border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+.nav-masthead .nav-link + .nav-link {
+  margin-left: 1rem;
+}
+
+.nav-masthead .active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+@media (min-width: 48em) {
+  .masthead-brand {
+    float: left;
+  }
+  .nav-masthead {
+    float: right;
+  }
+}
+
+.cover .btn-lg {
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+}
+
+/*
+ * Footer
+ */
+
+/* .mastfoot {
+  color: rgba(255, 255, 255, .5);
+} */
+
+#google-button img {
+  height: 60px;
+}
+
+#apple-button img {
+  margin: 10px;
+  height: 40px;
+}

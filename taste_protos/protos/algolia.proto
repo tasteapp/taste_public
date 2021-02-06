@@ -1,0 +1,168 @@
+syntax = "proto3";
+package algolia;
+
+import "common.proto";
+import "review.proto";
+
+message GeoLoc {
+  double lat = 1;
+  double lng = 2;
+}
+
+message DiscoverCache {
+  string name = 1;
+  string reference = 2;
+  GeoLoc _geoloc = 4;
+  repeated string _tags = 5;
+  string objectID = 6;
+  string record_type = 7;
+  string username = 8;
+  string restaurant_name = 9;
+}
+
+message RestaurantMarkerCache {
+  string name = 1;
+  repeated string reviewers = 5;
+  repeated ReviewInfoCache reviews = 6;
+  int32 num_favorites = 3;
+  message TopReview {
+    message User { string thumbnail = 1; }
+    User user = 1;
+    string photo = 2;
+    int32 score = 3;
+  }
+  TopReview top_review = 4;
+  GeoLoc _geoloc = 7;
+  repeated string _tags = 8;
+  string objectID = 9;
+  string reference = 10;
+  string record_type = 11;
+  string fb_place_id = 12;
+}
+
+message RestaurantCache {
+  string name = 1;
+  string fb_place_id = 2;
+  common.LatLng location = 3;
+  double popularity_score = 4;
+  int32 num_reviews = 5;
+  repeated common.PlaceType place_types = 6;
+  repeated double place_type_scores = 7;
+  repeated common.FoodType food_types = 8;
+  repeated common.PlaceCategory place_categories = 9;
+  ScrapeInfo yelp_info = 10;
+  ScrapeInfo google_info = 11;
+  repeated string serialized_hours = 12;
+  repeated string delivery = 13;
+  common.FirePhoto profile_pic = 14;
+  repeated CoverPhotoData cover_photos = 15;
+  GeoLoc _geoloc = 16;
+  repeated string _tags = 17;
+  string objectID = 18;
+  string reference = 19;
+  string record_type = 20;
+  repeated string pickup = 21;
+}
+
+message ScrapeInfo {
+  bool match = 1;
+  common.ScraperResults scraper_result = 2;
+}
+
+// [DI ref ID, Photo ref ID, User ref ID, Filename, (height), (width)]
+message CoverPhotoData {
+  repeated string data = 1;
+}
+
+message CoverPhoto {
+  common.FirePhoto photo = 1;
+  common.DocumentReferenceProto reference = 2;
+}
+
+message ReviewInfoCache {
+  common.DocumentReferenceProto reference = 1;
+  common.DocumentReferenceProto user = 2;
+  string photo = 3;
+  string user_photo = 4;
+  int32 score = 5;
+  repeated string more_photos = 6;
+}
+
+enum AlgoliaIndex {
+  ALGOLIA_INDEX_UNDEFINED = 0;
+  discover = 1;
+  referrals = 2;
+  reviews = 3;
+  restaurants = 4;
+}
+
+enum AlgoliaRecordType {
+  ALGOLIA_RECORD_TYPE_UNDEFINED = 0;
+  restaurant = 1;
+  restaurant_marker = 2;
+  dish = 3;
+  user = 4;
+  referral_link = 5;
+  review_marker = 6;
+  review_discover = 7;
+  city = 8;
+}
+
+message AlgoliaJSON {
+  GeoLoc _geoloc = 1;
+  repeated string _tags = 2;
+  string objectID = 3;
+  string reference = 4;
+  string record_type = 5;
+}
+
+message ReviewMarker {
+  string dish = 1;
+  string restaurant_name = 2;
+  common.DocumentReferenceProto user = 3;
+  string photo = 4;
+  string user_photo = 5;
+  string text = 6;
+  review.Reaction reaction = 7;
+  repeated string emojis = 8;
+  GeoLoc _geoloc = 9;
+  string objectID = 10;
+  repeated string _tags = 11;
+  int32 score = 12;
+  string username = 13;
+  string user_display_name = 14;
+  common.DocumentReferenceProto restaurant_ref = 15;
+  message RestaurantCounts {
+    int32 down = 1;
+    int32 love = 2;
+    int32 favorite = 3;
+    int32 up = 4;
+  }
+  RestaurantCounts restaurant_counts = 16;
+  string fb_place_id = 17;
+  repeated string more_photos = 18;
+}
+
+message DiscoverReviewRecord {
+  string display_text = 1;
+  common.DocumentReferenceProto review = 2;
+  string user = 3;
+  string user_photo = 4;
+  string dish = 5;
+  string restaurant_name = 6;
+  string photo = 7;
+  string search_text = 8;
+  repeated string more_photos = 9;
+  int32 score = 10;
+}
+
+message AlgoliaUserRecord {
+  GeoLoc _geoloc = 1;
+  repeated string _tags = 2;
+  string objectID = 3;
+  string reference = 4;
+  string record_type = 5;
+  string name = 6;
+  string username = 7;
+  string profile_pic_url = 8;
+}

@@ -1,0 +1,76 @@
+name: taste_cloud_functions
+description: Taste Cloud Functions
+version: 0.0.1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  algolia:
+    path: ../../third_party/dart_algolia
+  collection:
+  crypto:
+  edit_distance: ^0.4.1
+  equatable: ^0.6.0
+  firebase_functions_interop:
+  firebase_admin_interop:
+  geohash:
+  github:
+    path: ../../third_party/github
+  google_maps_webservice: ^0.0.16
+  googleapis:
+  googleapis_auth:
+  mailchimp:
+    path: ../../mailchimp
+  meta:
+  node_http:
+  path:
+  queries: ^0.1.12
+  quiver:
+  recase:
+  top_k: ^1.0.0
+  taste_protos:
+    path: ../../taste_protos
+  tuple:
+  web_mercator:
+    path: ../../web_mercator
+
+dev_dependencies:
+  build_runner:
+  build_node_compilers:
+  test: ^1.14.3
+  pedantic:
+  build_test:
+  stack_trace:
+  node_io:
+  code_gen:
+    path: ../../code_gen
+  logging:
+
+dependency_overrides:
+  protoc_plugin:
+    git:
+      url: https://github.com/jackdreilly/protobuf
+      path: protoc_plugin
+  protobuf:
+    git:
+      url: https://github.com/jackdreilly/protobuf
+      path: protobuf
+  node_interop:
+    git:
+      url: https://github.com/jackdreilly/node-interop
+      path: node_interop
+  node_io:
+    git:
+      url: https://github.com/jackdreilly/node-interop
+      path: node_io
+  node_http:
+    git:
+      url: https://github.com/jackdreilly/node-interop
+      path: node_http
+  firebase_admin_interop:
+    path: ../../third_party/firebase-admin-interop
+  firebase_functions_interop:
+    path: ../../third_party/firebase-functions-interop
+  s2geometry:
+    path: ../../third_party/dart-s2geometry

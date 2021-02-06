@@ -1,0 +1,129 @@
+syntax = "proto3";
+package instagram;
+
+import "common.proto";
+import "firestore.proto";
+import "review.proto";
+import "google/protobuf/timestamp.proto";
+
+message ImageInfo {
+  int32 width = 1;
+  int32 height = 2;
+  string url = 3;
+}
+
+message ImageLabel {
+  string label = 1;
+  double confidence = 2;
+}
+
+message ImageAnnotations {
+  double is_food = 1;
+  double is_drink = 2;
+  message PersonDetection {
+    double confidence = 1;
+    double bbox_area = 2;
+  }
+  repeated PersonDetection person_detections = 3;
+}
+
+message InstagramImage {
+  ImageInfo thumbnail = 1;
+  ImageInfo low_res = 2;
+  ImageInfo standard_res = 3;
+  bool is_food_or_drink = 4;
+  repeated ImageLabel ml_labels = 5;
+  common.DocumentReferenceProto photo = 6;
+  ImageAnnotations image_annotations = 7;
+  bool has_person = 8;
+}
+
+message InstagramLocation {
+  common.LatLng location = 1;
+  string name = 2;
+  string id = 3;
+  string address = 4;
+  repeated string post_codes = 5;
+  FacebookLocation fb_location = 6;
+  bool queried_location = 7;
+  int32 num_requests = 8;
+  // Whether a matching FB place is found.
+  bool found_match = 9;
+}
+
+message FacebookLocation {
+  string fb_place_id = 1;
+  string name = 2;
+  common.LatLng location = 3;
+  firestore.Restaurant.Attributes.Address address = 4;
+  repeated string categories = 5;
+  string phone = 6;
+  string website = 7;
+  firestore.Restaurant.Hours hours = 8;
+}
+
+message InstaPost {
+  common.DocumentReferenceProto user = 1;
+  string post_id = 2;
+  string username = 3;
+  repeated InstagramImage images = 4;
+  string caption = 5;
+  string dish = 17;
+  InstagramLocation instagram_location = 6;
+  FacebookLocation fb_location = 7;
+  bool is_homecooked = 8;
+  google.protobuf.Timestamp created_time = 9;
+  string user_id = 10;
+  int32 likes = 11;
+  repeated string tags = 12;
+  bool is_manual = 13;
+  string link = 14;
+  review.Reaction reaction = 15;
+  bool has_review = 16;
+  bool tried_extra_info = 18;
+  int32 num_update_attempts = 19;
+  int32 num_followers = 20;
+  bool hidden = 21;
+  bool do_not_update = 22;
+  common.Extras _extras = 23;
+  bool photos_labeled = 24;
+  repeated ImageAnnotations image_annotations = 25;
+}
+
+message InstagramScrapeRequest {
+  string username = 1;
+  common.DocumentReferenceProto user = 2;
+  int32 index = 3;
+  int32 priority = 4;
+  bool ignore_most_recent = 5;
+  bool failed = 6;
+  string failure_stack = 7;
+}
+
+message InstagramNetworkScrapeRequest {
+  string username = 1;
+  int32 index = 2;
+  int32 priority = 3;
+  int32 num_followers = 4;
+  int32 num_posts = 5;
+  bool failed = 6;
+}
+
+message RejectedInstagramUsers {
+  string username = 1;
+  string full_name = 2;
+  enum RejectionReason {
+    rejection_reason_undefined = 0;
+    no_email = 1;
+    posts_not_food = 2;
+    posts_not_tagged = 3;
+    posts_not_usa = 4;
+    too_many_followers = 5;
+    too_few_posts = 6;
+    is_food_call_failed = 7;
+    likely_restaurant = 8;
+  }
+  RejectionReason reason = 3;
+  int32 num_followers = 4;
+  int32 num_posts = 5;
+}

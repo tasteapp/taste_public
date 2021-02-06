@@ -1,0 +1,5 @@
+app_identifier("app.trytaste.taste.prod")
+apple_id("YOUR_APPLE_ID")
+
+itc_team_id("YOUR_TEAM_ID") # App Store Connect Team ID
+team_id("YOUR_TEAM_ID") # Developer Portal Team ID

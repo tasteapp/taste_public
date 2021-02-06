@@ -1,0 +1,9 @@
+syntax = "proto3";
+package review;
+
+enum Reaction {
+  UNDEFINED = 0;
+  up = 1;
+  down = 2;
+  love = 3;
+}

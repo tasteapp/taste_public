@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="/__/firebase/7.0.0/firebase-app.js"></script>
+
+    <script src="/__/firebase/7.0.0/firebase-analytics.js"></script>
+    <script src="/__/firebase/7.0.0/firebase-firestore.js"></script>
+    <script src="/__/firebase/7.0.0/firebase-auth.js"></script>
+
+    <!-- Initialize Firebase -->
+    <script src="/__/firebase/init.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.css" />
+    <script type="text/javascript">
+        // FirebaseUI config.
+        const origin = window.location.origin;
+        var uiConfig = {
+            signInSuccessUrl: `${origin}/trytaste_obscured_admin_page.html`,
+            signInOptions: [
+                {
+                    provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                    customParameters: {
+                        hd: 'trytaste.app'
+                    }
+                }
+
+            ],
+            tosUrl: `${origin}/tos.html`,
+            // Privacy policy url/callback.
+            privacyPolicyUrl: function () {
+                window.location.assign(`${origin}/privacy_policy.html`);
+            }
+        };
+
+        // Initialize the FirebaseUI Widget using Firebase.
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        // The start method will wait until the DOM is loaded.
+        ui.start('#firebaseui-auth-container', uiConfig);
+    </script>
+</head>
+
+<body>
+    <h1>Admin Login</h1>
+    <div id="firebaseui-auth-container"></div>
+</body>
+
+</html>

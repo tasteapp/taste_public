@@ -1,0 +1,60 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Taste Development",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "debug",
+        "program": "lib/main_development.dart",
+        "args": [
+          "--flavor",
+          "development"
+        ]
+      },
+      {
+        "name": "Taste Development Profile",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "profile",
+        "program": "lib/main_development.dart",
+        "args": [
+          "--flavor",
+          "development"
+        ]
+      },
+      {
+        "name": "Taste Development Release",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "release",
+        "program": "lib/main_development.dart",
+        "args": [
+          "--flavor",
+          "development"
+        ]
+      },
+      {
+        "name": "Taste Production Debug",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "debug",
+        "program": "lib/main_production.dart",
+        "args": [
+          "--flavor",
+          "production"
+        ]
+      },
+      {
+        "name": "Taste Production Release",
+        "request": "launch",
+        "type": "dart",
+        "flutterMode": "release",
+        "program": "lib/main_production.dart",
+        "args": [
+          "--flavor",
+          "production"
+        ]
+      }
+    ]
+  }

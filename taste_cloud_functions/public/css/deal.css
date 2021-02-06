@@ -1,0 +1,23 @@
+/**
+ * Styles for /deal.html.
+ **/
+
+.qr-image {
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 50px;
+}
+
+#deal-info {
+  padding-bottom: 25px;
+}
+
+#shorthand-info #code {
+  font-family: 'Courier New', Courier, monospace;
+  color: darkgreen;
+  font-weight: bold;
+}
+
+#shorthand-info {
+  padding: 10px;
+}

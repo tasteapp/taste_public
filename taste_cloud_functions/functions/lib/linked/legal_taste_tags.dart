@@ -1,0 +1,1 @@
+../../../../taste/lib/screens/create_review/review/legal_taste_tags.dart

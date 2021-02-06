@@ -1,0 +1,8 @@
+google_cloud_bucket_name("tasteapp_match")
+
+storage_mode("google_cloud")
+
+type("appstore")
+
+app_identifier(["app.trytaste.taste.prod", "app.trytaste.merchant", "app.trytaste.taste.dev", "app.trytaste.merchant.dev"])
+username("YOUR_USERNAME")

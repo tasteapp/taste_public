@@ -1,0 +1,313 @@
+syntax = "proto3";
+package analytics;
+
+enum TATab {
+  // Roots
+  discover_tab = 0;
+  food_finder_tab = 1;
+  create_tab = 2;
+  map_tab = 3;
+  profile_tab = 4;
+  // Profile
+  profile_posts = 5;
+  profile_smart_sorted = 6;
+  profile_favorites = 7;
+  profile_bookmarks = 8;
+  profile_badges = 9;
+  // Daily Tasty
+  dt_voting = 10;
+  dt_leaderboard = 11;
+  dt_past_winnners = 12;
+  // Search
+  search_places = 13;
+  search_dishes = 14;
+  search_trending = 15;
+  search_people = 16;
+}
+
+enum TAPage {
+  discover_root = 0;
+  food_finder_root = 1;
+  create_root = 2;
+  map_root = 3;
+  profile_root = 4;
+  tag_search = 5;
+  posts = 6;
+  profile_photo = 7;
+  edit_account = 8;
+  report_bug = 9;
+  talk_with_us = 10;
+  daily_tasty = 11;
+  conversations = 12;
+  conversation = 13;
+  user_map = 14;
+  followers_list = 15;
+  following_list = 16;
+  likes = 17;
+  add_comment = 18;
+  edit_comment_page = 19;
+  select_photos = 20;
+  edit_photos = 21;
+  create_post_page = 22;
+  edit_post_page = 23;
+  search_place = 24;
+  edit_favorites = 25;
+  city_champions = 26;
+  dt_faq = 27;
+  user_level_page = 28;
+  user_leaderboard_page = 29;
+  ask_phone_number = 30;
+  find_friends = 31;
+  dt_expanded_photo_page = 32;
+  crop_image_page = 33;
+  select_cuisine_page = 34;
+  select_emojis_page = 35;
+  select_delivery_app = 36;
+  tag_meal_mates = 37;
+  select_contest_page = 38;
+  comments_page = 39;
+  reply_comment_page = 40;
+  insta_web_login_page = 41;
+  videos_page = 42;
+  restaurant_page = 43;
+  profile_page = 44;
+  badge_page = 45;
+  search_city_champions = 46;
+  new_conversation_page = 47;
+  add_favorite = 48;
+  user_leaderboard_help_page = 49;
+  notifications = 50;
+  meal_mates_page = 51;
+  post_page = 52;
+  bookmarkers_page = 53;
+  add_recipe_page = 54;
+  recipe_requesters_page = 55;
+  base_log_in_page = 56;
+  email_view = 57;
+  connect_account_page = 58;
+  blm_landing_page = 59;
+  discover_onboarding_page = 60;
+  search_onboarding_page = 61;
+  posting_onboarding_page = 62;
+  map_onboarding_page = 63;
+  profile_onboarding_page = 64;
+  food_finder_filters = 65;
+  maybe_list_page = 66;
+}
+
+enum TAEvent {
+  liked_post = 0;
+  liked_comment = 1;
+  bookmark_post = 2;
+  click_post = 3;
+  expand_description = 4;
+  click_likes = 5;
+  drafted_comment = 6;
+  edited_comment = 7;
+  submitted_comment = 8;
+  deleted_comment = 9;
+  draft_favorite = 10;
+  clicked_add_favorite = 11;
+  remove_favorite = 12;
+  swipe_multi_photo = 13;
+  swipe_multi_post = 14;
+  draft_post = 15;
+  create_post = 16;
+  submit_post_attempt = 29;
+  submit_post_attempt_incomplete = 30;
+  discard_post = 17;
+  start_edit_post = 18;
+  complete_edit_post = 31;
+  delete_post = 19;
+  dt_submit_vote = 20;
+  dt_see_faq = 21;
+  // {state: bool - is enabled}
+  discover_toggle_following = 22;
+  // {state: bool - is enabled}
+  discover_toggle_home_cooked = 23;
+  nav_item_tap = 24;
+  remote_config = 25;
+  cannot_find_badge = 26;
+  clicked_invite_friend = 27;
+  dt_votes_ran_out = 28;
+  selected_assets = 32;
+  selected_take_photo = 33;
+  tapped_cuisine_tag = 34;
+  tappe_emoji_tag = 35;
+  /// When users taps another restaurant chip after already having selected one.
+  replaced_selected_restaurant_chip = 36;
+  tapped_restaurant_chip = 37;
+  clicked_clear_restaurant = 38;
+  /// When user selects restaurant from search page
+  // {selected: bool} => whether the restaurant was replaced.
+  selected_restaurant_from_search = 39;
+  clicked_comments = 40;
+  tapped_user_photo = 41;
+  web_map = 42;
+  map_promotion = 43;
+  clicked_report_bug = 44;
+  clicked_share_taste = 45;
+  discover_refreshed = 46;
+  discover_loaded = 47;
+  cancelled_instagram_link = 48;
+  linked_instagram = 49;
+  unlinked_instagram = 50;
+  clicked_sign_in = 51;
+  force_setup_account = 52;
+  clicked_add_favorites_snackbar = 53;
+  map_tap = 54;
+  map_my_location = 55;
+  map_go_to_search_result = 56;
+  map_marker_tap = 57;
+  map_tapped_preview = 58;
+  map_review_clicked = 59;
+  map_preview_changed = 60;
+  tapped_map_following_filter = 61;
+  tapped_map_settings = 62;
+  go_to_profile = 63;
+  map_swipe_page = 64;
+  clicked_tag = 65;
+  city_champ_tile_tap = 66;
+  /// Tried to add an already favorited place.
+  favorites_duplicate_place = 67;
+  favorites_city_limits_reached = 68;
+  favorites_added = 69;
+  routed_notification = 70;
+  tapped_trending_tag = 71;
+  fb_only_resto = 72;
+  clicked_search_suggestion = 73;
+  clicked_badge_leaderboard_tile = 74;
+  clicked_user_map = 75;
+  clicked_edit_favorites = 76;
+  tapped_notification = 77;
+  added_favorite = 78;
+  tapped_bookmark_review = 79;
+  tapped_badge_streak_button = 80;
+  // {pattern: string - pattern that had empty result. no location (privacy)}
+  empty_place_lookup = 81;
+  // {
+  //   search_term: string
+  //   letters: int - number of letters in the search before selection.
+  //   fb_name: string
+  //   fb_id: string
+  // }
+  selected_place_lookup_suggestion = 82;
+  tapped_restaurant_map_button = 83;
+  tapped_meal_mate_text_link = 84;
+  tapped_delete_comment = 85;
+  undid_delete_comment = 86;
+  tapped_comment_likes = 87;
+  tapped_post_on_restaurant = 88;
+  tapped_reaction_in_review = 89;
+  tapped_category_chip = 90;
+  tapped_city_chip = 91;
+  /// {
+  ///   search_term: string,
+  ///   map: bool,
+  /// }
+  searched = 92;
+  tapped_daily_tasty_logo = 93;
+  tapped_user_rank = 94;
+  tapped_badge = 95;
+  /// User hit back on restaurant look up page without a selection.
+  favorites_place_lookup_no_selection = 96;
+  double_tap_heart = 97;
+  attribution_success = 98;
+  attribution_failure = 99;
+  resto_tapped_call_btn = 100;
+  resto_tapped_navigate_btn = 101;
+  resto_tapped_webpage_btn = 102;
+  resto_tapped_gmaps_rating = 103;
+  tapped_map_black_owned = 104;
+  tapped_search_black_owned = 105;
+  selected_black_charity = 106;
+  did_not_select_black_charity = 107;
+  resto_tapped_yelp_rating = 108;
+  intro_tabs_share_your_taste = 109;
+  intro_tabs_discover_new_food = 110;
+  intro_tabs_remember_your_eats = 111;
+  // {
+  //   index: int,
+  //   item_path: string,
+  //   mode: DiscoverMode string,
+  // }
+  discover_scrolled_to_item = 112;
+  // {
+  //   post: id,
+  //   expanded: bool,
+  //   owner: bool,
+  //   has_recipe: bool,
+  //   has_requested: bool,
+  //   widget: review_in_list || review || review_reveal
+  // }
+  tapped_recipe = 113;
+  unrequested_recipe = 114;
+  // {tab: TATab enum string}
+  fetched_starting_tab = 115;
+  // {type: string}
+  failed_sign_in = 116;
+  clicked_link_account = 117;
+  failed_link_account = 118;
+  create_post_presubmit_dialog_keep_editing = 119;
+  create_post_presubmit_dialog_submit = 120;
+  // {search_scroll_item_index: int}
+  popular_restaurants_scroll = 121;
+  // {search_scroll_item_index: int}
+  friends_favorites_scroll = 122;
+  // {search_scroll_item_index: int}
+  visit_again_scroll = 123;
+  discover_mode_most_popular = 124;
+  discover_mode_most_recent = 125;
+  discover_mode_nearby = 126;
+  discover_bor_banner_tap = 127;
+  discover_bor_banner_learn_more = 128;
+  discover_bor_banner_search_now = 129;
+  // {ref: string}
+  search_page_resto_tap = 130;
+  discover_tap_first_to_post = 131;
+  dismiss_bor_banner = 132;
+  discover_location_not_available = 133;
+  location_available = 134;
+  location_unavailable = 135;
+  // {resto_ref: string}
+  resto_missing_ratings = 136;
+  // {
+  //   search_term: string
+  //   letters: int - number of letters in the search before selection.
+  //   name: string
+  // }
+  selected_loc_lookup_suggestion = 137;
+  empty_result_from_loc_lookup = 138;
+  tapped_filter_chip = 139;
+  food_finder_toggle_map = 141;
+  resto_tapped_postmates_url = 142;
+  resto_tapped_doordash_url = 143;
+  resto_tapped_ubereats_url = 144;
+  resto_tapped_seamless_url = 145;
+  resto_tapped_caviar_url = 146;
+  resto_tapped_favor_url = 147;
+  resto_tapped_grubhub_url = 148;
+  // { resto_ref: string }
+  food_finder_swipe_right = 149;
+  // { resto_ref: string }
+  food_finder_swipe_left = 150;
+  // { resto_ref: string }
+  food_finder_thumbs_up = 151;
+  // { resto_ref: string }
+  food_finder_thumbs_down = 152;
+  // { resto_ref: string }
+  food_finder_expand_resto = 153;
+  // { resto_ref: string }
+  food_finder_collapse_resto = 154;
+  food_finder_search = 155;
+  food_finder_expand_filters = 156;
+  food_finder_filters_cancel = 157;
+  food_finder_filters_apply = 158;
+  food_finder_maybe_list = 159;
+  // { resto_ref: string }
+  food_finder_maybe_list_item = 160;
+  // { time_taken_ms: int }
+  food_finder_load = 161;
+  // { time_taken_ms: int }
+  food_finder_discover_items_load = 162;
+}

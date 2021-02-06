@@ -1,0 +1,27 @@
+syntax = "proto3";
+package notifications;
+
+import "firestore.proto";
+
+message FcmExtras {
+  firestore.NotificationType notification_type = 1;
+  string notification_path = 2;
+  string document_link = 3;
+  string user = 4;
+}
+
+enum ClickAction { FLUTTER_NOTIFICATION_CLICK = 0; }
+
+message FcmMessage {
+  message Notification {
+    string body = 1;
+    string title = 2;
+  }
+  Notification notification = 1;
+  message Data {
+    // Serializes to FcmExtras
+    string extras = 1;
+    ClickAction click_action = 2;
+  }
+  Data data = 2;
+}

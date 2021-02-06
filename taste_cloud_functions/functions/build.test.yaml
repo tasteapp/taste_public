@@ -1,0 +1,30 @@
+targets:
+  $default:
+    sources:
+      include:
+        - "dart/**"
+        - "lib/**"
+    builders:
+      taste_cloud_functions|taste:
+        generate_for:
+          - lib/**
+      build_node_compilers|entrypoint:
+        generate_for:
+          - dart/**
+        options:
+          compiler: dart2js
+          dart2js_args:
+            - -Denv=test
+builders:
+  taste:
+    import: package:code_gen/code_gen.dart
+    builder_factories:
+      - firestoreProtoBuilder
+      - tasteRequestBuilder
+    build_extensions:
+      .dart:
+        - firestore_proto.g.part
+        - taste_request.g.part
+    build_to: cache
+    applies_builders:
+      - source_gen|combining_builder

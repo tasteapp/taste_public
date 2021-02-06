@@ -1,0 +1,32 @@
+syntax = "proto3";
+package firestore_query;
+
+import "google/protobuf/timestamp.proto";
+import "common.proto";
+
+message FirestoreQuery {
+  string path = 1;
+  bool is_collection_group = 2;
+  message WhereClause {
+    string where_field = 1;
+    enum Comparator {
+      COMPARATOR_UNDEFINED = 0;
+      is_equal_to = 1;
+    }
+    Comparator comparator = 2;
+    oneof where_value {
+      string string_value = 3;
+      common.DocumentReferenceProto reference_value = 4;
+      google.protobuf.Timestamp timestamp_value = 5;
+      int32 int_value = 6;
+      double double_value = 7;
+    }
+  }
+  repeated WhereClause where_clauses = 3;
+  int32 limit = 4;
+  message OrderClause {
+    string order_field = 1;
+    bool descending = 2;
+  }
+  repeated OrderClause order_clauses = 5;
+}

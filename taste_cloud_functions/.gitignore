@@ -1,0 +1,10 @@
+*.log
+.firebase/
+.vscode/settings.json
+functions/.dart_tool/
+functions/build/
+functions/node_modules/
+functions/test/__pycache__/
+functions/test/.pytest_cache/
+functions/.packages
+export/

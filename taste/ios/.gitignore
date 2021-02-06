@@ -1,0 +1,5 @@
+vendor/
+fastlane/report.xml
+Runner.ipa
+Runner.app.*
+gc_keys.json

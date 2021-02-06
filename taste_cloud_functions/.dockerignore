@@ -1,0 +1,15 @@
+*
+!functions/dart
+!functions/lib
+!functions/test/*py
+!functions/test/is_emulator_running.sh
+!functions/test/pytest.ini
+!functions/pubspec*
+!functions/package*
+!functions/build.dev.yaml
+!Makefile
+!testing-service*
+!firestore.rules
+!firestore.indexes.json
+!firebase.json
+!.firebaserc

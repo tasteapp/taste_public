@@ -1,0 +1,25 @@
+{
+  "main": "index.js",
+  "engines": {
+    "node": "10"
+  },
+  "dependencies": {
+    "@google-cloud/bigquery": "^4.5.0",
+    "@google-cloud/firestore": "^3.8.1",
+    "@google-cloud/logging": "^6.0.0",
+    "@grpc/grpc-js": "^0.6.15",
+    "@mapbox/sphericalmercator": "^1.1.0",
+    "firebase-admin": "^8.12.1",
+    "firebase-functions": "^3.11.0",
+    "form-data": "^3.0.0",
+    "image-size": "^0.8.3",
+    "js-levenshtein": "^1.1.6",
+    "mailchimp-api-v3": "^1.14.0",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^2.0.0",
+    "rss": "^1.2.2",
+    "source-map-support": "^0.5.16",
+    "web-mercator-tiles": "^0.1.3"
+  }
+}

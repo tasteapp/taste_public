@@ -1,0 +1,416 @@
+syntax = "proto3";
+package common;
+
+import "google/protobuf/timestamp.proto";
+import "firebase_rules_options.proto";
+
+message Extras {
+  option (rules_gen.message).required = true;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+message DocumentReferenceProto { string path = 1; }
+
+message LatLng {
+  double latitude = 1;
+  double longitude = 2;
+}
+
+message FirebaseStorage {
+  string full = 1;
+  string medium = 2;
+  string thumbnail = 3;
+}
+
+message AppMetadata {
+  string app_id = 1;
+  string app_name = 2;
+  string platform_version = 3;
+  string project_code = 4;
+  string project_version = 5;
+}
+
+message Point {
+  double x = 1;
+  double y = 2;
+}
+
+message Polygon { repeated Point vertices = 1; }
+
+message Size {
+  int32 width = 1;
+  int32 height = 2;
+}
+
+message FirePhoto {
+  DocumentReferenceProto photo_reference = 1
+      [ (rules_gen.field).required = true ];
+  string firebase_storage = 2
+      [ (rules_gen.field).required = true, (rules_gen.field).not_empty = true ];
+  Point center = 3;
+  Size photo_size = 4;
+}
+
+message DuplicateFbPlaceIdRecord {
+  // The duplicate fb place id.
+  sint64 duplicate_id = 1;
+  // What we treat as the "original".
+  sint64 source_id = 2;
+}
+
+message FbPlaceIdDuplicates {
+  repeated DuplicateFbPlaceIdRecord records = 1;
+}
+
+message ScraperResults {
+  string place_id = 1;
+  string name = 2;
+  string address = 3; // Raw scraped address string.
+  int32 num_reviews = 4;
+  int32 num_scraped_reviews = 5;
+  float avg_rating = 6;
+  string url = 7;
+}
+
+enum PlaceCategory {
+  PLACE_CATEGORY_UNDEFINED = 0;
+  restaurants = 1;
+  cafes = 2;
+  desserts = 3;
+  bars = 4;
+}
+
+// Place Types (includes cuisines) sorted by popularity in restos collection.
+// Curated from FB category fields.
+enum PlaceType {
+  PLACE_TYPE_UNDEFINED = 0;
+  american_restaurant = 1;
+  coffee_shop = 2;
+  fast_food_restaurant = 3;
+  italian_restaurant = 4;
+  breakfast_and_brunch_restaurant = 5;
+  bar = 6;
+  pizza_place = 7;
+  seafood_restaurant = 8;
+  bakery = 9;
+  new_american_restaurant = 10;
+  sushi_restaurant = 11;
+  mexican_restaurant = 12;
+  bar_and_grill = 13;
+  ice_cream_shop = 14;
+  cafe = 15;
+  burger_restaurant = 16;
+  family_style_restaurant = 17;
+  pub = 18;
+  asian_fusion_restaurant = 19;
+  sandwich_shop = 20;
+  deli = 21;
+  caterer = 22;
+  diner = 23;
+  dessert_shop = 24;
+  vegetarian_or_vegan_restaurant = 25;
+  barbecue_restaurant = 26;
+  steakhouse = 27;
+  chinese_restaurant = 28;
+  cocktail_bar = 29;
+  thai_restaurant = 30;
+  wine_bar = 31;
+  french_restaurant = 32;
+  korean_restaurant = 33;
+  smoothie_and_juice_bar = 34;
+  european_restaurant = 35;
+  mediterranean_restaurant = 36;
+  chicken_joint = 37;
+  brewery = 38;
+  sports_bar = 39;
+  japanese_restaurant = 40;
+  health_food_restaurant = 41;
+  tea_room = 42;
+  donut_shop = 43;
+  ramen_restaurant = 44;
+  food_and_beverage = 45;
+  bubble_tea_shop = 46;
+  food_truck = 47;
+  tapas_bar_and_restaurant = 48;
+  gastropub = 49;
+  tex_mex_restaurant = 50;
+  southern_restaurant = 51;
+  pho_restaurant = 52;
+  spanish_restaurant = 53;
+  food_stand = 54;
+  grocery_store = 55;
+  greek_restaurant = 56;
+  farmers_market = 57;
+  cantonese_restaurant = 58;
+  beer_bar = 59;
+  vietnamese_restaurant = 60;
+  middle_eastern_restaurant = 61;
+  bagel_shop = 62;
+  cupcake_shop = 63;
+  indian_restaurant = 64;
+  dim_sum_restaurant = 65;
+  winery_or_vineyard = 66;
+  hawaiian_restaurant = 67;
+  poke_restaurant = 68;
+  beer_garden = 69;
+  asian_restaurant = 70;
+  frozen_yogurt_shop = 71;
+  soup_restaurant = 72;
+  latin_american_restaurant = 73;
+  cajun_and_creole_restaurant = 74;
+  hot_dog_joint = 75;
+  halal_restaurant = 76;
+  taiwanese_restaurant = 77;
+  candy_store = 78;
+  creperie = 79;
+  salad_bar = 80;
+  filipino_restaurant = 81;
+  buffet_restaurant = 82;
+  caribbean_restaurant = 83;
+  gelato_shop = 84;
+  cafeteria = 85;
+  peruvian_restaurant = 86;
+  southwestern_restaurant = 87;
+  comfort_food_restaurant = 88;
+  cuban_restaurant = 89;
+  gluten_free_restaurant = 90;
+  modern_european_restaurant = 91;
+  british_restaurant = 92;
+  irish_restaurant = 93;
+  noodle_house = 94;
+  hot_pot_restaurant = 95;
+  fish_and_chips_restaurant = 96;
+  kosher_restaurant = 97;
+  soul_food_restaurant = 98;
+  lebanese_restaurant = 99;
+  chocolate_shop = 100;
+  portuguese_restaurant = 101;
+  shaved_ice_shop = 102;
+  brazilian_restaurant = 103;
+  szechuan_or_sichuan_restaurant = 104;
+  wine_or_spirits = 105;
+  turkish_restaurant = 106;
+  german_restaurant = 107;
+  argentinian_restaurant = 108;
+  dive_bar = 109;
+  taco_restaurant = 110;
+  australian_restaurant = 111;
+  irish_pub = 112;
+  live_and_raw_food_restaurant = 113;
+  south_indian_restaurant = 114;
+  persian_or_iranian_restaurant = 115;
+  fondue_restaurant = 116;
+  bed_and_breakfast = 117;
+  continental_restaurant = 118;
+  whisky_bar = 119;
+  teppanyaki_restaurant = 120;
+  kebab_shop = 121;
+  colombian_restaurant = 122;
+  pakistani_restaurant = 123;
+  malaysian_restaurant = 124;
+  sake_bar = 125;
+  indonesian_restaurant = 126;
+  belgian_restaurant = 127;
+  scandinavian_restaurant = 128;
+  theme_restaurant = 129;
+  jamaican_restaurant = 130;
+  shabu_shabu_restaurant = 131;
+  canadian_restaurant = 132;
+  hong_kong_restaurant = 133;
+  venezuelan_restaurant = 134;
+  israeli_restaurant = 135;
+  north_indian_restaurant = 136;
+  ethiopian_restaurant = 137;
+  singaporean_restaurant = 138;
+  moroccan_restaurant = 139;
+  speakeasy = 140;
+  puerto_rican_restaurant = 141;
+  neapolitan_restaurant = 142;
+  polynesian_restaurant = 143;
+  bavarian_restaurant = 144;
+  afghan_restaurant = 145;
+  shanghainese_restaurant = 146;
+  udon_restaurant = 147;
+  tuscan_restaurant = 148;
+  yakitori_restaurant = 149;
+  tiki_bar = 150;
+  yakiniku_restaurant = 151;
+  roman_restaurant = 152;
+  nepalese_restaurant = 153;
+  salvadoran_restaurant = 154;
+  russian_restaurant = 155;
+  african_restaurant = 156;
+  cambodian_restaurant = 157;
+  mongolian_restaurant = 158;
+  eastern_european_restaurant = 159;
+  abruzzo_restaurant = 160;
+  bunsik_restaurant = 161;
+  himalayan_restaurant = 162;
+  basque_restaurant = 163;
+  tonkatsu_restaurant = 164;
+  sicilian_restaurant = 165;
+  burmese_restaurant = 166;
+  south_african_restaurant = 167;
+  soba_restaurant = 168;
+  polish_restaurant = 169;
+  austrian_restaurant = 170;
+  dominican_restaurant = 171;
+  bossam_or_jokbal_restaurant = 172;
+  drive_in_restaurant = 173;
+  swiss_restaurant = 174;
+  hungarian_restaurant = 175;
+  arabian_restaurant = 176;
+  czech_restaurant = 177;
+  okonomiyaki_restaurant = 178;
+  indo_chinese_restaurant = 179;
+  armenian_restaurant = 180;
+  hunan_restaurant = 181;
+  tempura_restaurant = 182;
+  venetian_restaurant = 183;
+  unagi_restaurant = 184;
+  georgian_restaurant = 185;
+  donburi_restaurant = 186;
+  kaiseki_restaurant = 187;
+  beijing_restaurant = 188;
+  sri_lankan_restaurant = 189;
+  scottish_restaurant = 190;
+  indian_chinese_restaurant = 191;
+  takoyaki_restaurant = 192;
+  syrian_restaurant = 193;
+  balinese_restaurant = 194;
+  uzbek_restaurant = 195;
+  emilia_romagna_restaurant = 196;
+  egyptian_restaurant = 197;
+  chilean_restaurant = 198;
+  yoshoku_restaurant = 199;
+  javanese_restaurant = 200;
+  catalan_restaurant = 201;
+  zhejiang_restaurant = 202;
+  yunnan_restaurant = 203;
+  sukiyaki_restaurant = 204;
+  gukbap_restaurant = 205;
+  costa_rican_restaurant = 206;
+  bengali_or_bangladeshi_restaurant = 207;
+  punjabi_restaurant = 208;
+  molecular_gastronomy_restaurant = 209;
+  bolivian_restaurant = 210;
+  samgyetang_restaurant = 211;
+  nabe_restaurant = 212;
+  haitian_restaurant = 213;
+  guatemalan_restaurant = 214;
+  ecuadorian_restaurant = 215;
+  wagashi_restaurant = 216;
+  ukrainian_restaurant = 217;
+  shaanxi_restaurant = 218;
+  sardinian_restaurant = 219;
+  nicaraguan_restaurant = 220;
+  xinjiang_restaurant = 221;
+  uruguayan_restaurant = 222;
+  shanxi_restaurant = 223;
+  senegalese_restaurant = 224;
+  kushikatsu_restaurant = 225;
+  janguh_restaurant = 226;
+  gujarati_restaurant = 227;
+  trinidadian_restaurant = 228;
+  romanian_restaurant = 229;
+  paraguayan_restaurant = 230;
+  panamanian_restaurant = 231;
+  padangnese_restaurant = 232;
+  nigerian_restaurant = 233;
+  monjayaki_restaurant = 234;
+  marche_restaurant = 235;
+  macanese_restaurant = 236;
+  jiangsu_restaurant = 237;
+  henan_restaurant = 238;
+  umbrian_restaurant = 239;
+  tamilian_restaurant = 240;
+  swabian_restaurant = 241;
+  parsi_restaurant = 242;
+  molise_restaurant = 243;
+  lombard_restaurant = 244;
+  kurdish_restaurant = 245;
+  kerala_restaurant = 246;
+  huaiyang_restaurant = 247;
+  honduran_restaurant = 248;
+  hainan_restaurant = 249;
+  goan_restaurant = 250;
+  dongbei_restaurant = 251;
+  dhaba_restaurant = 252;
+  calabrian_restaurant = 253;
+  belizean_restaurant = 254;
+  acehnese_restaurant = 255;
+}
+
+enum FoodType {
+  FOOD_TYPE_UNDEFINED = 0;
+  dessert = 1;
+  breakfast = 2;
+  ice_cream = 3;
+  snack = 4;
+  salad = 5;
+  seafood = 6;
+  cocktail = 7;
+  soup = 8;
+  noodle = 9;
+  curry = 10;
+  coffee = 11;
+  wine = 12;
+  beer = 13;
+  pizza = 14;
+  chicken = 15;
+  sandwich = 16;
+  pastry = 17;
+  taco = 18;
+  french_fries = 19;
+  fried_chicken = 20;
+  donut = 21;
+  pasta = 22;
+  sushi = 23;
+  confectionery = 24;
+  bread = 25;
+  dim_sum = 26;
+  shrimp = 27;
+  noodle_soup = 28;
+  street_food = 29;
+  egg = 30;
+  ramen = 31;
+  cupcake = 32;
+  steak = 33;
+  hors_doeuvre = 34;
+  cookie = 35;
+  latte = 36;
+  macaron = 37;
+  oyster = 38;
+  fish = 39;
+  beef = 40;
+  gyro = 41;
+  dumpling = 42;
+  chow_mein = 43;
+  pancake = 44;
+  pho = 45;
+  hot_pot = 46;
+  udon = 47;
+  soup_dumpling = 48;
+  salmon = 49;
+  waffle = 50;
+  nachos = 51;
+  muffin = 52;
+  croissant = 53;
+  scone = 54;
+  risotto = 55;
+  cheese_fries = 56;
+  burrito = 57;
+  cannoli = 58;
+  cheesecake = 59;
+  fried_rice = 60;
+  churro = 61;
+  espresso = 62;
+  lobster_roll = 63;
+  charcuterie = 64;
+  malasada = 65;
+  eggs_benedict = 66;
+  shaved_ice = 67;
+  cake = 68;
+  burgers_and_chicken_sandwiches = 69;
+}

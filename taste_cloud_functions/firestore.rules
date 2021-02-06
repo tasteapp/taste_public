@@ -1,0 +1,524 @@
+rules_version = '2';
+
+function isAdmin() {
+  return (request.auth.token.admin == true) || (request.auth.token.email.matches(".*@trytaste.app"));
+}
+
+function relaxed() {
+  return true;
+}
+
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+// @@START_GENERATED_FUNCTIONS@@
+function isCommentMessagePermissive(resource) {
+  return resource.keys().hasAll(['user','text','_extras','parent']) &&
+    ((resource.user is path)) &&
+    ((resource.text is string && resource.text.trim().size() > 0)) &&
+    ((isExtrasMessagePermissive(resource._extras))) &&
+    ((resource.parent is path)) &&
+    ((!resource.keys().hasAny(['tagged_users']) || resource.tagged_users == null) || (resource.tagged_users is list));
+}
+function isCommentMessage(resource) {
+  return isCommentMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['user','text','_extras','parent','tagged_users','_force_update']));
+}
+function isExtrasMessagePermissive(resource) {
+  return resource.keys().hasAll(['created_at','updated_at']) &&
+    ((resource.created_at is timestamp)) &&
+    ((resource.updated_at is timestamp));
+}
+function isExtrasMessage(resource) {
+  return isExtrasMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['updated_at','created_at','_force_update']));
+}
+function isDailyTastyVoteMessagePermissive(resource) {
+  return resource.keys().hasAll(['score','user','post','date','_extras']) &&
+    ((resource.score is number && (resource.score >= 1 && resource.score <= 5))) &&
+    ((resource.user is path && resource.user == authUserDoc())) &&
+    ((resource.post is path)) &&
+    ((resource.date is timestamp)) &&
+    ((isExtrasMessagePermissive(resource._extras)));
+}
+function isDailyTastyVoteMessage(resource) {
+  return isDailyTastyVoteMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['score','user','post','date','_extras','_force_update']));
+}
+function isConversationMessagePermissive(resource) {
+  return resource.keys().hasAll(['_extras','members']) &&
+    ((isExtrasMessagePermissive(resource._extras))) &&
+    ((resource.members is list && (resource.members.size() == 2 && 
+      resource.members.toSet().size() == resource.members.size() && 
+      resource.members[0] is path && 
+      resource.members[1] is path))) &&
+    ((!resource.keys().hasAny(['messages']) || resource.messages == null) || (resource.messages is list)) &&
+    ((!resource.keys().hasAny(['seen_by']) || resource.seen_by == null) || (resource.seen_by is list)) &&
+    ((!resource.keys().hasAny(['last_seen']) || resource.last_seen == null) || (resource.last_seen is map));
+}
+function isConversation_MessageMessagePermissive(resource) {
+  return resource.keys().hasAll([]) &&
+    ((!resource.keys().hasAny(['user']) || resource.user == null) || (resource.user is path)) &&
+    ((!resource.keys().hasAny(['text']) || resource.text == null) || (resource.text is string)) &&
+    ((!resource.keys().hasAny(['sent_at']) || resource.sent_at == null) || (resource.sent_at is timestamp));
+}
+function isConversation_MessageMessage(resource) {
+  return isConversation_MessageMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['sent_at','text','user','_force_update']));
+}
+function isConversationMessage(resource) {
+  return isConversationMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['_extras','members','last_seen','seen_by','messages','_force_update']));
+}
+function isRestaurantMessagePermissive(resource) {
+  return resource.keys().hasAll(['_extras','attributes']) &&
+    ((isExtrasMessagePermissive(resource._extras))) &&
+    ((isRestaurant_AttributesMessagePermissive(resource.attributes))) &&
+    ((!resource.keys().hasAny(['merchant']) || resource.merchant == null) || (resource.merchant is path)) &&
+    ((!resource.keys().hasAny(['yelp']) || resource.yelp == null) || (isRestaurant_ScraperResultsMessagePermissive(resource.yelp))) &&
+    ((!resource.keys().hasAny(['google']) || resource.google == null) || (isRestaurant_ScraperResultsMessagePermissive(resource.google))) &&
+    ((!resource.keys().hasAny(['popularity_score']) || resource.popularity_score == null) || (resource.popularity_score is number)) &&
+    ((!resource.keys().hasAny(['profile_pic']) || resource.profile_pic == null) || (resource.profile_pic is path)) &&
+    ((!resource.keys().hasAny(['fire_profile_pic']) || resource.fire_profile_pic == null) || (isFirePhotoMessagePermissive(resource.fire_profile_pic))) &&
+    ((!resource.keys().hasAny(['profile_pic_external_url']) || resource.profile_pic_external_url == null) || (resource.profile_pic_external_url is string && resource.profile_pic_external_url.matches('^http[s]?://.+')));
+}
+function isRestaurant_AttributesMessagePermissive(resource) {
+  return resource.keys().hasAll(['location','name','fb_place_id','address']) &&
+    ((resource.location is latlng)) &&
+    ((resource.name is string && resource.name.trim().size() > 0)) &&
+    ((!resource.keys().hasAny(['google_place_id']) || resource.google_place_id == null) || (resource.google_place_id is string && resource.google_place_id.trim().size() > 0)) &&
+    ((!resource.keys().hasAny(['all_fb_place_ids']) || resource.all_fb_place_ids == null) || (resource.all_fb_place_ids is list)) &&
+    ((resource.fb_place_id is string && resource.fb_place_id.trim().size() > 0)) &&
+    ((isRestaurant_Attributes_AddressMessagePermissive(resource.address))) &&
+    ((!resource.keys().hasAny(['categories']) || resource.categories == null) || (resource.categories is list));
+}
+function isRestaurant_Attributes_AddressMessagePermissive(resource) {
+  return resource.keys().hasAll(['city','country','source','source_location']) &&
+    ((!resource.keys().hasAny(['street']) || resource.street == null) || (resource.street is string)) &&
+    ((resource.city is string && resource.city.trim().size() > 0)) &&
+    ((!resource.keys().hasAny(['state']) || resource.state == null) || (resource.state is string)) &&
+    ((resource.country is string && resource.country.trim().size() > 0)) &&
+    ((isRestaurant_Attributes_Address_SourceEnum(resource.source))) &&
+    ((resource.source_location is latlng));
+}
+function isRestaurant_Attributes_Address_SourceEnum(resource) {
+  return resource == 'SOURCE_UNDEFINED' ||
+    resource == 'facebook' ||
+    resource == 'google_geocoder';
+}
+function isRestaurant_Attributes_AddressMessage(resource) {
+  return isRestaurant_Attributes_AddressMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['city','country','source','source_location','state','street','_force_update']));
+}
+function isRestaurant_AttributesMessage(resource) {
+  return isRestaurant_AttributesMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['location','name','fb_place_id','address','categories','all_fb_place_ids','google_place_id','_force_update']));
+}
+function isRestaurant_ScraperResultsMessagePermissive(resource) {
+  return resource.keys().hasAll([]) &&
+    ((!resource.keys().hasAny(['place_id']) || resource.place_id == null) || (resource.place_id is string)) &&
+    ((!resource.keys().hasAny(['name']) || resource.name == null) || (resource.name is string)) &&
+    ((!resource.keys().hasAny(['address']) || resource.address == null) || (resource.address is string)) &&
+    ((!resource.keys().hasAny(['num_reviews']) || resource.num_reviews == null) || (resource.num_reviews is int && resource.num_reviews >= -2147483648 && resource.num_reviews <= 2147483647)) &&
+    ((!resource.keys().hasAny(['num_scraped_reviews']) || resource.num_scraped_reviews == null) || (resource.num_scraped_reviews is int && resource.num_scraped_reviews >= -2147483648 && resource.num_scraped_reviews <= 2147483647)) &&
+    ((!resource.keys().hasAny(['avg_rating']) || resource.avg_rating == null) || (resource.avg_rating is number));
+}
+function isRestaurant_ScraperResultsMessage(resource) {
+  return isRestaurant_ScraperResultsMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['avg_rating','num_scraped_reviews','num_reviews','address','name','place_id','_force_update']));
+}
+function isRestaurantMessage(resource) {
+  return isRestaurantMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['_extras','attributes','profile_pic_external_url','fire_profile_pic','profile_pic','popularity_score','google','yelp','merchant','_force_update']));
+}
+function isFirePhotoMessagePermissive(resource) {
+  return resource.keys().hasAll(['photo_reference','firebase_storage']) &&
+    ((resource.photo_reference is path)) &&
+    ((resource.firebase_storage is string && resource.firebase_storage.trim().size() > 0)) &&
+    ((!resource.keys().hasAny(['center']) || resource.center == null) || (isPointMessagePermissive(resource.center)));
+}
+function isFirePhotoMessage(resource) {
+  return isFirePhotoMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['photo_reference','firebase_storage','center','_force_update']));
+}
+function isPointMessagePermissive(resource) {
+  return resource.keys().hasAll([]) &&
+    ((!resource.keys().hasAny(['x']) || resource.x == null) || (resource.x is number)) &&
+    ((!resource.keys().hasAny(['y']) || resource.y == null) || (resource.y is number));
+}
+function isPointMessage(resource) {
+  return isPointMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['y','x','_force_update']));
+}
+function isRecipeRequestMessagePermissive(resource) {
+  return resource.keys().hasAll(['user','parent','_extras']) &&
+    ((resource.user is path)) &&
+    ((resource.parent is path)) &&
+    ((isExtrasMessagePermissive(resource._extras)));
+}
+function isRecipeRequestMessage(resource) {
+  return isRecipeRequestMessagePermissive(resource) &&
+    (resource.keys().hasOnly(['user','parent','_extras','_force_update']));
+}
+// @@END_GENERATED_FUNCTIONS@@
+    
+    /////////////////////////
+    ///
+    ///    See go/direct-writes
+    ///
+    /////////////////////////
+
+    // Returns the parent reference value within `data`.
+    //
+    // * data => document data
+    //  * parentTag => string: the field name where the parent reference is within
+    // `data`.
+    function parentField(data, parentTag) {
+      return data[parentTag];
+    }
+    // Returns whether the parent field within `data` has a collection type
+    // contained in `collectionList`, or true if `collectionList` is empty.
+    //
+    //  * data => document data holding parent reference
+    //  * collectionList => List of strings, containing valid collection names
+    //    for this parent.
+    //  * parentTag => string: the field name where the parent reference is within
+    // `data`.
+    function parentFieldIs(data, collectionList, parentTag) {
+      return collectionList.toSet().size() == 0 ||  parentField(data, parentTag)[3] in collectionList.toSet();
+    }
+    // Returns whether the parent reference inside of `data` exists.
+    //
+    // * data => document data
+    //  * parentTag => string: the field name where the parent reference is within
+    // `data`.
+    function parentExists(data, parentTag) {
+      return exists(parentField(data, parentTag));
+    }
+    // Runs validity checks against the parent inside `data`.
+    //
+    //  * data => document data holding parent reference
+    //  * collectionList => List of strings, containing valid collection names
+    //    for this parent.
+    //  * parentTag => string: the field name where the parent reference is within
+    // `data`.
+    function checkParent(data, collectionList, parentTag) {
+      return parentExists(data, parentTag) && parentFieldIs(data,
+      collectionList, parentTag);
+    }
+    // Runs validity checks against the parent and user references inside `data`.
+    //
+    //  * data => document data holding parent reference
+    //  * collectionList => List of strings, containing valid collection names
+    //    for this parent.
+    //  * parentTag => string: the field name where the parent reference is within
+    // `data`.
+    //  * userTag => string: the field name where the user reference is within
+    // `data`.
+    function checkUserParent(data, collectionList, parentTag, userTag) {
+      return checkParent(data, collectionList, parentTag) && data[userTag] == authUserDoc();
+    }
+    // Returns the uniqueness-guaranteeing index reference for the given resource.
+    //
+    // * resource: Resource -> the resource that has a corresponding index.
+    // * parentTag: string -> field name holding parent reference in resource.data
+    function indexReference(resource, parentTag) {
+      return
+      /databases/$(database)/documents/index/$(request.path[3])/parent/$(parentField(resource.data,
+      parentTag)[3])/id/$(parentField(resource.data, parentTag)[4])/user/$(request.auth.uid);
+    }
+    // Returns whether the resource's index exists after transaction completes.
+    //
+    // This resource relies on go/direct-writes to guarantee that no duplicates exist.
+    function indexExistsAfter(resource, parentTag) {
+      return existsAfter(indexReference(resource, parentTag));
+    }
+    // Returns whether the resource's corresponding index document is properly
+    // tracking this reference.
+    //
+    // This resource relies on go/direct-writes to guarantee that no duplicates exist.
+    function indexDocumentMatches(resource,parentTag) {
+      return getAfter(indexReference(resource, parentTag)).data.reference == request.path;
+    }
+    function toggleCreate(collectionList) {
+      return toggleCreateGeneric(collectionList, 'parent', 'user');
+    }
+    // Guarantees that the request is creating a document that has a unique
+    // parent/user combo, tracked by go/direct-writes.
+    // Additionally guarantees that `parent` has a collection type in
+    // `collectionList`, or any collection type if `collectionList` is empty.
+    //
+    // Basically, it guarantees that the parent/user fields of the create-doc
+    // are valid, and that post-transaction, the proper index record is set up
+    // to track the record's uniqueness.
+    function toggleCreateGeneric(collectionList, parentTag, userTag) {
+      return  
+        checkUserParent(request.resource.data, collectionList, parentTag, userTag) &&
+        // No previous record should exist for this
+        !exists(indexReference(request.resource, parentTag)) &&
+        indexDocumentMatches(request.resource, parentTag)
+    }
+    // Guarantees that the request is properly deleting a go/direct-writes
+    // unique document. See `toggleCreateGeneric`.
+    function toggleDeleteGeneric(parentTag, userTag) {
+      return resource.data[userTag] == authUserDoc() && !indexExistsAfter(resource, parentTag);
+    }
+    function toggleDelete() {
+      return toggleDeleteGeneric('parent', 'user');
+    }
+
+    function requestUid() {
+      return request.auth.uid;
+    }
+    function authUserDoc() {
+      return databaseDoc('users', requestUid());
+    }
+    function userTagged(resource) {
+      return resource.data.user == authUserDoc();
+    }
+    function userTaggedCreate() {
+      return userTagged(request.resource);
+    }
+    function userTaggedUpdate() {
+      return userTagged(resource) && request.resource.data.user == resource.data.user;
+    }
+    function userTaggedDelete() {
+      return userTagged(resource);
+    }
+    function userTaggedRead() {
+      return userTagged(resource);
+    }
+    function databaseDoc(collection, doc) {
+      return /databases/$(database)/documents/$(collection)/$(doc);
+    }
+    function isAllowableIndex(collection) {
+      return collection in [
+        'bookmarks',
+        'likes',
+        'favorites',
+        'followers',
+        'daily_tasty_votes',
+        'recipe_requests'];
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /instagram_posts/{document} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /instagram_username_requests/{document} {
+      allow read: if true;
+    }
+    match /user_posts_starting_locations/{doc} {
+      allow read: if true;
+    }
+    match /badges/{document} {
+      allow read: if true;
+    }
+    match /contests/{document} {
+      allow read: if true;
+    }
+    match /likes/{document} {
+      allow read: if true;
+      allow create: if toggleCreate(['reviews', 'comments', 'home_meals']);
+      allow delete: if toggleDelete();
+    }
+    match /reviews/{document} {
+      allow read: if true;
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+      allow delete: if userTaggedDelete();
+    }
+    match /food_finder_actions/{document} {
+      allow read: if userTaggedCreate();
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+      allow delete: if userTaggedDelete();
+    }
+    match /home_meals/{document} {
+      allow read: if true;
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+      allow delete: if userTaggedDelete();
+    }
+    match /bookmarks/{document} {
+      allow read: if true;
+      allow create: if toggleCreate(['reviews','home_meals']);
+      allow delete: if toggleDelete();
+    }
+    match /recipe_requests/{document} {
+      allow read: if true;
+      allow create: if (relaxed() || isRecipeRequestMessage(request.resource.data)) && toggleCreate(['home_meals']);
+      allow delete: if toggleDelete();
+    }
+    match /daily_tasty_votes/{document} {
+      allow read: if true;
+      allow create: if 
+        toggleCreateGeneric(['reviews','home_meals'], 'post', 'user') && 
+        (relaxed() || isDailyTastyVoteMessage(request.resource.data));
+      allow delete: if toggleDeleteGeneric('post', 'user');
+      allow update: if 
+        userTaggedUpdate() && 
+        (relaxed() || isDailyTastyVoteMessagePermissive(request.resource.data)) && 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['score', 'date', '_extras']);
+    }
+    match /comments/{document} {
+      allow read: if true;
+      allow create: if checkUserParent(request.resource.data, ['reviews','home_meals'],
+      'parent', 'user') && 
+      (relaxed() || isCommentMessage(request.resource.data))
+      allow update: if 
+          userTaggedUpdate() && 
+          (relaxed() || isCommentMessagePermissive(request.resource.data)) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['text', '_extras']) &&
+          request.resource.data._extras.diff(resource.data._extras).affectedKeys().hasOnly(['updated_at']);
+      allow delete: if userTaggedDelete();
+    }
+    match /reports/{document} {
+      allow read, write: if isAdmin();
+      allow create: if userTaggedCreate()
+    }
+    match /bug_reports/{document} {
+      allow read, write: if isAdmin();
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+    }
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if userId == requestUid();
+      // TODO: lock down more
+      allow update: if userId == requestUid();
+      match /private_documents/private_documents {
+        allow read: if userId == requestUid();
+        allow create: if userId == requestUid();
+        allow update: if userId == requestUid();
+      }
+    }
+    match /photos/{document} {
+      allow read: if true;
+      allow delete: if userTaggedDelete();
+    }
+    match /followers/{document} {
+      allow read: if true;
+      allow create: if toggleCreateGeneric(['users'], 'following', 'follower')
+        && (request.resource.data.following != request.resource.data.follower);
+      allow delete: if toggleDeleteGeneric( 'following', 'follower');
+    }
+    match /favorites/{document} {
+      allow read: if true;
+      allow create: if toggleCreateGeneric(['restaurants'], 'restaurant', 'user');
+      allow delete: if toggleDeleteGeneric( 'restaurant', 'user');
+    }
+    match /notifications/{notification_id} {
+      allow read: if userTaggedRead();
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate() && 
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['seen'])
+              && request.resource.data.seen is bool
+              && request.resource.data.seen;
+      allow delete: if userTaggedDelete();
+    }
+    match /algolia_records/{document} {
+      allow read, delete: if isAdmin();
+    }
+    match /restaurants/{document=**} {
+      allow read: if true;
+      allow create: if (relaxed() || isRestaurantMessage(request.resource.data));
+      allow update: if 
+        (relaxed() || isRestaurantMessagePermissive(request.resource.data)) && 
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(["profile_pic_external_url"])
+          ||
+          (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly(["attributes"])
+            &&
+            request.resource.data.attributes.diff(
+              resource.data.attributes
+            ).affectedKeys().hasOnly(["google_place_id"])
+          )
+        ) 
+    }
+    /////////////////////////
+    ///
+    ///    See go/direct-writes
+    ///
+    /////////////////////////
+    match /index/{collection}/parent/{parentCollection}/id/{parentId}/user/{user} {
+      function isUser() {
+        return user == requestUid() && exists(authUserDoc());
+      }
+      allow delete: if isUser() && !existsAfter(resource.data.reference);
+      allow update: if isUser() && existsAfter(resource.data.reference);
+      allow read: if isAdmin();
+      allow create: if
+        // only certain `collection` values are indexable, see `isAllowableIndex` definition.
+        isAllowableIndex(collection) &&
+        // {user} matches this user.
+        isUser() &&
+        // this parent document exists.
+        exists(databaseDoc(parentCollection, parentId)) && 
+        // the reference being tracked inside this index document exists post-transaction.
+        existsAfter(request.resource.data.reference);
+    }
+    match /views/{collection} {
+      allow read: if true;
+      allow create: if checkUserParent(request.resource.data, ['reviews','home_meals'], 'parent', 'user');
+    }
+    match /discover_items/{id} {
+      allow read: if true;
+      // TODO
+      allow update: if true;
+      allow delete: if resource.data.user.reference == authUserDoc();
+    }
+    match /insta_posts/{id} {
+      allow read: if userTaggedRead();
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+      allow delete: if userTaggedDelete();
+    }
+    match /cities/{id} {
+      allow read: if true;
+    }
+    match /tags/{id} {
+      allow read: if true;
+    }
+    match /conversations/{id} {
+      function isMember(resource) {
+        return authUserDoc() in resource.data.members;
+      }
+      allow read: if isMember(resource);
+      allow create: if isMember(request.resource) && (relaxed() || isConversationMessage(request.resource.data));
+      allow update: if isMember(resource) &&
+        "members" in request.resource.data.diff(resource.data).unchangedKeys() &&
+        "created_at" in request.resource.data._extras.diff(resource.data._extras).unchangedKeys() &&
+        (relaxed() || isConversationMessagePermissive(request.resource.data)) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['_extras','last_seen','seen_by','messages']);
+    }
+
+    match /movies/{id} {
+      allow read: if true;
+    }
+
+    match /instagram_tokens/{id} {
+      allow read: if userTaggedRead();
+      allow create: if userTaggedCreate()
+      allow update: if userTaggedUpdate();
+      allow delete: if userTaggedDelete();
+    }
+
+    match /instagram_locations/{id} {
+      allow read: if true;
+      // TODO
+      allow create: if true;
+    }
+    match /bad_crops/{id} {
+      allow create: if true;
+    }
+    match /taste_bud_groups/{id} {
+      allow read: if true;
+    }
+  }
+}

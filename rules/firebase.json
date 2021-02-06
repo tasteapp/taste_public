@@ -1,0 +1,10 @@
+{
+  "firestore": {
+    "rules": "../taste_cloud_functions/firestore.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    }
+  }
+}

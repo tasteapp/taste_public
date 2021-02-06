@@ -1,0 +1,17 @@
+name: code_gen
+description: Generate code for Taste cloud functions
+
+environment:
+  sdk: '>=2.5.0 <3.0.0'
+
+dependencies:
+ platform:
+ source_gen:
+ code_builder:
+ recase:
+ taste_protos:
+  path: ../taste_protos
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  test: ^1.6.0

@@ -1,0 +1,36 @@
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    ENV["SLACK_URL"] = "SLACK_HOOK_URL"
+  end
+  desc "Taste: Push a new beta build to TestFlight"
+  lane :beta do
+    build_number = number_of_commits() + 300000000
+    match(
+      type: "appstore",
+      readonly: true,
+    )
+    Dir.chdir ".." do
+      sh("pod", "setup")
+    end
+    Dir.chdir "../.." do
+      sh("flutter", "packages", "get")
+      sh("flutter",
+         "build",
+         "ios",
+         "--flavor",
+         "production",
+         "-t", "lib/main_production.dart",
+         "--build-number",
+         "#{build_number}",
+         "--no-codesign")
+    end
+    # https://docs.fastlane.tools/codesigning/getting-started/#automatic-manual-signing
+    disable_automatic_code_signing(path: "Runner.xcodeproj")
+    build_app(workspace: "Runner.xcworkspace", scheme: "production")
+    enable_automatic_code_signing(path: "Runner.xcodeproj")
+    upload_to_testflight
+    slack(message: "Updated app store taste testflight build number #{build_number}")
+  end
+end

@@ -1,0 +1,73 @@
+rules_version = '2';
+
+
+function isAppLogin() {
+  return (
+    isAnonymousLogin() ||
+    isFacebookLogin() ||
+    isAdmin() ||
+    isGoogleLogin() ||
+    isEmailLogin() ||
+    isAppleLogin()
+  );
+}
+
+function userHasProvider(provider) {
+  return request.auth.token.firebase.sign_in_provider == provider;
+}
+
+function isFacebookLogin() {
+  return userHasProvider('facebook.com');
+}
+
+function isEmailLogin() {
+  return userHasProvider('password');
+}
+
+function isAnonymousLogin() {
+  return userHasProvider('anonymous');
+}
+
+function isAppleLogin() {
+  return userHasProvider('custom'); // TODO(jackdreilly): Can we track this creation better?
+}
+
+function isGoogleLogin() {
+  return userHasProvider('google.com');
+}
+
+function isAdmin() {
+  return (request.auth.token.admin == true) || (request.auth.token.email.matches(".*@trytaste.app"));
+}
+
+function isUser(userId) {
+  return (request.auth.uid == userId);
+}
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+    match /restaurants/{restaurantId} {
+      match /uploads/{allPaths=**} {
+        allow read: if isAppLogin();
+    	}
+    }
+    match /users/{userId} {
+      match /uploads/{allPaths=**} {
+        allow read: if isAppLogin();
+        allow write: if isUser(userId);
+        allow delete: if isAdmin();
+      }
+      match /samplers/{allPaths=**} {
+        allow read: if isAppLogin();
+      }
+
+      match /bug_reports/{allPaths=**} {
+        allow read,write: if isAdmin();
+        allow write: if isUser(userId);
+      }
+    }
+  }
+}
